@@ -2,7 +2,27 @@ const models = girlModels();
 const ANTE = 5;
 const BET = 5;
 const START_BANK = 100;
-const COPIES = 4;
+const RANKS = [
+  { label: "A", value: 14 },
+  { label: "2", value: 2 },
+  { label: "3", value: 3 },
+  { label: "4", value: 4 },
+  { label: "5", value: 5 },
+  { label: "6", value: 6 },
+  { label: "7", value: 7 },
+  { label: "8", value: 8 },
+  { label: "9", value: 9 },
+  { label: "10", value: 10 },
+  { label: "J", value: 11 },
+  { label: "Q", value: 12 },
+  { label: "K", value: 13 },
+];
+const SUITS = [
+  { glyph: "♥", color: "red" },
+  { glyph: "♦", color: "red" },
+  { glyph: "♠", color: "black" },
+  { glyph: "♣", color: "black" },
+];
 
 const cubeButton = document.getElementById("cubeButton");
 const cube = document.getElementById("cube");
@@ -57,18 +77,39 @@ function shuffle(list) {
 
 function makeDeck() {
   const cards = [];
-  models.forEach((src, rank) => {
-    for (let i = 0; i < COPIES; i += 1) cards.push({ src, rank });
+  let photo = 0;
+  SUITS.forEach((suit) => {
+    RANKS.forEach((rank) => {
+      cards.push({
+        src: models[photo % models.length],
+        rank: rank.value,
+        label: rank.label,
+        suit: suit.glyph,
+        color: suit.color,
+      });
+      photo += 1;
+    });
   });
   return shuffle(cards);
 }
 
 function cardHtml(card, hidden) {
-  const src = hidden ? "" : card.src;
-  return `<article class="card${hidden ? "" : " flipped"}">
+  if (hidden) {
+    return `<article class="card">
+      <div class="card-inner">
+        <div class="card-back"></div>
+        <div class="card-front"></div>
+      </div>
+    </article>`;
+  }
+  return `<article class="card flipped">
     <div class="card-inner">
       <div class="card-back"></div>
-      <div class="card-front">${src ? `<img src="${src}" alt="">` : ""}</div>
+      <div class="card-front ${card.color}">
+        <img src="${card.src}" alt="">
+        <span class="pip pip-tl">${card.label}<i>${card.suit}</i></span>
+        <span class="pip pip-br">${card.label}<i>${card.suit}</i></span>
+      </div>
     </div>
   </article>`;
 }
@@ -99,7 +140,18 @@ function combos(cards, k) {
   return out;
 }
 
+function straightHigh(values) {
+  const uniq = [...new Set(values)].sort((a, b) => a - b);
+  if (uniq.length !== 5) return 0;
+  if (uniq[4] - uniq[0] === 4) return uniq[4];
+  if (uniq[0] === 2 && uniq[1] === 3 && uniq[2] === 4 && uniq[3] === 5 && uniq[4] === 14) return 5;
+  return 0;
+}
+
 function scoreFive(five) {
+  const values = five.map((c) => c.rank);
+  const flush = five.every((c) => c.suit === five[0].suit);
+  const wheel = straightHigh(values);
   const tally = {};
   five.forEach((c) => {
     tally[c.rank] = (tally[c.rank] || 0) + 1;
@@ -107,14 +159,20 @@ function scoreFive(five) {
   const groups = Object.entries(tally)
     .map(([rank, n]) => ({ rank: Number(rank), n }))
     .sort((a, b) => b.n - a.n || b.rank - a.rank);
-  const kickers = five.map((c) => c.rank).sort((a, b) => b - a);
-  let kind = 1;
-  if (groups[0].n === 4) kind = 7;
-  else if (groups[0].n === 3 && groups[1] && groups[1].n === 2) kind = 6;
-  else if (groups[0].n === 3) kind = 5;
-  else if (groups[0].n === 2 && groups[1] && groups[1].n === 2) kind = 4;
-  else if (groups[0].n === 2) kind = 3;
-  return [kind, ...groups.map((g) => g.rank), ...kickers];
+  const kickers = values.slice().sort((a, b) => b - a);
+  if (flush && wheel) return [9, wheel];
+  if (groups[0].n === 4) return [8, groups[0].rank, groups[1].rank];
+  if (groups[0].n === 3 && groups[1] && groups[1].n === 2) return [7, groups[0].rank, groups[1].rank];
+  if (flush) return [6, ...kickers];
+  if (wheel) return [5, wheel];
+  if (groups[0].n === 3) return [4, groups[0].rank, ...kickers];
+  if (groups[0].n === 2 && groups[1] && groups[1].n === 2) {
+    const high = Math.max(groups[0].rank, groups[1].rank);
+    const low = Math.min(groups[0].rank, groups[1].rank);
+    return [3, high, low, groups[2].rank];
+  }
+  if (groups[0].n === 2) return [2, groups[0].rank, ...kickers];
+  return [1, ...kickers];
 }
 
 function bestScore(seven) {

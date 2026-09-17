@@ -151,7 +151,7 @@ body {
 
 .card-front {
   transform: rotateY(180deg);
-  background: #111;
+  background: #fff;
 }
 
 .card-front img {
@@ -160,6 +160,33 @@ body {
   object-fit: cover;
   display: block;
 }
+
+.pip {
+  position: absolute;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1;
+  font-weight: 900;
+  font-size: 1.05rem;
+  min-width: 22px;
+  padding: 3px 5px;
+  border-radius: 7px;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+}
+
+.pip i {
+  font-style: normal;
+  font-size: 0.85rem;
+}
+
+.pip-tl { top: 4px; left: 4px; }
+.pip-br { right: 4px; bottom: 4px; transform: rotate(180deg); }
+.card-front.red .pip { color: #dc2626; }
+.card-front.black .pip { color: #111827; }
 
 .status {
   min-height: 1.4em;
@@ -320,6 +347,15 @@ body {
   .card {
     width: 56px;
     height: 84px;
+  }
+
+  .pip {
+    font-size: 0.7rem;
+    padding: 1px 3px;
+  }
+
+  .pip i {
+    font-size: 0.65rem;
   }
 
   .scene {
