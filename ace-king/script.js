@@ -1,5 +1,23 @@
-const models = girlModels();
-const OTHERS = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q"];
+const ACES = [
+  "../images/model1.png",
+  "../images/model2.png",
+  "../images/model7.png",
+  "../images/model8.png",
+  "../images/model9.png",
+  "../images/model14.png",
+  "../images/model15.png",
+];
+
+const KINGS = [
+  "../images/model3.png",
+  "../images/model4.png",
+  "../images/model5.png",
+  "../images/model6.png",
+  "../images/model10.png",
+  "../images/model11.png",
+  "../images/model12.png",
+  "../images/model13.png",
+];
 
 const cubeButton = document.getElementById("cubeButton");
 const cube = document.getElementById("cube");
@@ -14,11 +32,12 @@ const heroRank = document.getElementById("heroRank");
 
 let busy = false;
 
-function pickRank() {
-  const roll = Math.random();
-  if (roll < 0.3) return "A";
-  if (roll < 0.6) return "K";
-  return OTHERS[Math.floor(Math.random() * OTHERS.length)];
+function pickCard() {
+  const deck = [
+    ...ACES.map((photo) => ({ rank: "A", photo })),
+    ...KINGS.map((photo) => ({ rank: "K", photo })),
+  ];
+  return deck[Math.floor(Math.random() * deck.length)];
 }
 
 function hideResult() {
@@ -48,23 +67,21 @@ function flip() {
   cubeButton.disabled = true;
   statusEl.textContent = "הופך קלף...";
 
-  const rank = pickRank();
-  heroPhoto.src = models[Math.floor(Math.random() * models.length)];
-  heroRank.textContent = rank;
+  const card = pickCard();
+  heroPhoto.src = card.photo;
+  heroRank.textContent = card.rank;
 
   window.setTimeout(() => heroCard.classList.add("flipped"), 280);
   window.setTimeout(() => {
     cube.classList.remove("spin-fast");
     cubeButton.disabled = false;
     busy = false;
-    if (rank === "A") {
+    if (card.rank === "A") {
       statusEl.textContent = "אס זוכה!";
       showResult("ace");
-    } else if (rank === "K") {
+    } else {
       statusEl.textContent = "קינג בוכה";
       showResult("king");
-    } else {
-      statusEl.textContent = "לא אס ולא קינג — נסה שוב";
     }
   }, 950);
 }
