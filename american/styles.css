@@ -18,8 +18,8 @@ body { font-family: "Heebo", sans-serif; background: #07030f; color: #fff; overf
   border: 4px solid #f0c14b;
   box-shadow: inset 0 0 40px rgba(0,0,0,0.35);
 }
-.wheel-wrap { position: relative; width: 260px; height: 260px; margin: 0 auto 10px; }
-.wheel-wrap canvas { width: 260px; height: 260px; }
+.wheel-wrap { position: relative; width: 360px; height: 360px; margin: 0 auto 10px; }
+.wheel-wrap canvas { width: 360px; height: 360px; }
 .pointer {
   position: absolute; left: 50%; top: -4px; z-index: 3;
   width: 0; height: 0; margin-left: -11px;
@@ -50,7 +50,7 @@ body { font-family: "Heebo", sans-serif; background: #07030f; color: #fff; overf
 .color-bet.red { background: #c41e3a; border-radius: 14px; }
 .color-bet.black { background: #141414; border-radius: 14px; }
 .color-bet strong, .girl-bet span { font-size: 0.85rem; opacity: 0.9; }
-.girls { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+.girls { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; }
 .girl-bet {
   position: relative; border: 3px solid #c41e3a; padding: 0; border-radius: 12px;
   overflow: hidden; background: #111; cursor: pointer;
@@ -91,5 +91,7 @@ body { font-family: "Heebo", sans-serif; background: #07030f; color: #fff; overf
 .jackpot-sub { margin-top: 6px; color: #7a2a12; font-weight: 800; }
 @keyframes spin { from { transform: rotateX(-18deg) rotateY(0deg); } to { transform: rotateX(-18deg) rotateY(360deg); } }
 @media (max-width: 420px) {
-  .girl-bet img { height: 64px; }
+  .wheel-wrap, .wheel-wrap canvas { width: 300px; height: 300px; }
+  .girls { grid-template-columns: repeat(6, 1fr); }
+  .girl-bet img { height: 56px; }
 }

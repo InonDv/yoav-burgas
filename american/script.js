@@ -2,13 +2,12 @@ function pocket(n, color) {
   return { key: "g" + n, src: "../images/model" + n + ".png", color, n };
 }
 
-const RED = new Set([1, 2, 7, 8, 9, 14, 15]);
-const GIRL_NS = [1, 3, 2, 4, 7, 5, 8, 6, 9, 10, 14, 11, 15, 12, 13];
-const pockets = [{ key: "0", color: "green", label: "0" }];
-for (let i = 0; i < 31; i += 1) {
-  const n = GIRL_NS[i % GIRL_NS.length];
-  pockets.push(pocket(n, RED.has(n) ? "red" : "black"));
-}
+const RED = new Set([1, 2, 7, 8, 9, 14, 15, 16, 17, 18]);
+const GIRL_NS = [
+  1, 3, 2, 4, 7, 5, 8, 6, 9, 10, 14, 11, 15, 12, 16, 13,
+  17, 3, 18, 4, 1, 5, 2, 6, 7, 10, 8, 11, 9, 12, 14, 13,
+];
+const pockets = GIRL_NS.map((n) => pocket(n, RED.has(n) ? "red" : "black"));
 
 const girls = [];
 const seen = new Set();
@@ -109,17 +108,19 @@ function drawWheel() {
     ctx.strokeStyle = "#f0c14b";
     ctx.lineWidth = 1.5;
     ctx.stroke();
-    ctx.save();
-    ctx.rotate(a0 + s / 2);
     if (p.src && images[p.src]) {
-      ctx.drawImage(images[p.src], -18, -r + 6, 36, 48);
-    } else {
-      ctx.fillStyle = "#fff";
-      ctx.font = "bold 26px Heebo, sans-serif";
-      ctx.textAlign = "center";
-      ctx.fillText("0", 0, -r + 48);
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.arc(0, 0, r, a0, a0 + s);
+      ctx.closePath();
+      ctx.clip();
+      ctx.rotate(a0 + s / 2 + Math.PI / 2);
+      const imgW = 56;
+      const imgH = 86;
+      ctx.drawImage(images[p.src], -imgW / 2, -r + 4, imgW, imgH);
+      ctx.restore();
     }
-    ctx.restore();
   });
   ctx.beginPath();
   ctx.arc(0, 0, 28, 0, Math.PI * 2);
@@ -190,7 +191,7 @@ async function spin() {
   bank += result.won;
   bets = {};
   paintStacks();
-  document.querySelectorAll(".girl-bet, .color-bet, .zero-bet").forEach((el) => {
+  document.querySelectorAll(".girl-bet, .color-bet").forEach((el) => {
     el.classList.toggle("hit", el.dataset.bet === hit.key || el.dataset.bet === hit.color);
   });
   if (hit.src && result.straight) {
@@ -244,7 +245,7 @@ document.querySelectorAll("[data-chip]").forEach((btn) => {
     document.querySelectorAll("[data-chip]").forEach((b) => b.classList.toggle("on", b === btn));
   });
 });
-document.querySelectorAll(".color-bet, .zero-bet").forEach((btn) => {
+document.querySelectorAll(".color-bet").forEach((btn) => {
   btn.addEventListener("click", () => place(btn.dataset.bet));
 });
 clearBtn.addEventListener("click", clearBets);
