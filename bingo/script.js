@@ -28,11 +28,13 @@ const LINES = [
 ];
 
 let board = [];
+let cells = [];
 let marked = Array(9).fill(false);
 let called = new Set();
 let busy = false;
 let won = false;
 let lastCall = "";
+let waitingNew = false;
 
 function shuffle(list) {
   const copy = [...list];
@@ -58,15 +60,25 @@ function hasBingo() {
   return LINES.some((line) => line.every((i) => marked[i]));
 }
 
+function paint() {
+  cells.forEach((cell, i) => {
+    cell.classList.toggle("marked", marked[i]);
+    cell.classList.toggle("match", Boolean(lastCall) && !marked[i] && board[i] === lastCall);
+  });
+}
+
 function renderBoard() {
   grid.innerHTML = "";
-  board.forEach((src, i) => {
+  cells = board.map((src, i) => {
     const cell = document.createElement("button");
     cell.type = "button";
-    cell.className = "cell" + (marked[i] ? " marked" : "");
-    cell.innerHTML = `<img src="${src}" alt="">`;
+    cell.className = "cell";
+    cell.innerHTML = `<img src="${src}" alt=""><span class="stamp">✓</span>`;
+    cell.addEventListener("click", () => tap(i));
     grid.appendChild(cell);
+    return cell;
   });
+  paint();
 }
 
 function deal() {
@@ -75,18 +87,38 @@ function deal() {
   marked = Array(9).fill(false);
   called = new Set();
   won = false;
+  waitingNew = false;
   lastCall = "";
   callEl.removeAttribute("src");
   callEl.classList.remove("show");
-  statusEl.textContent = "";
   hideWin();
   renderBoard();
+}
+
+function tap(i) {
+  if (won || busy || waitingNew) return;
+  if (!called.has(board[i])) {
+    statusEl.textContent = "קודם הגרלה בקוביה, ואז אותה בחורה בלוח";
+    return;
+  }
+  if (marked[i]) return;
+  marked[i] = true;
+  paint();
+  if (hasBingo()) {
+    won = true;
+    waitingNew = true;
+    statusEl.textContent = "בינגו! לחץ על הקוביה ללוח חדש";
+    showWin(board[i]);
+  } else {
+    statusEl.textContent = "מעולה. הגרל שוב בקוביה";
+  }
 }
 
 function draw() {
   if (busy || won) return;
   if (called.size >= models.length) {
-    statusEl.textContent = "נגמרו ההגרלות";
+    waitingNew = true;
+    statusEl.textContent = "נגמרו ההגרלות. לחץ ללוח חדש";
     return;
   }
   busy = true;
@@ -97,26 +129,22 @@ function draw() {
   called.add(lastCall);
   callEl.src = lastCall;
   callEl.classList.add("show");
-  board.forEach((src, i) => {
-    if (src === lastCall) marked[i] = true;
-  });
-  renderBoard();
+  paint();
   window.setTimeout(() => {
     cube.classList.remove("spin-fast");
     cubeButton.disabled = false;
     busy = false;
-    if (hasBingo()) {
-      won = true;
-      statusEl.textContent = "בינגו!";
-      showWin(lastCall);
-    } else {
-      statusEl.textContent = `${called.size} מתוך ${models.length}`;
-    }
-  }, 650);
+    statusEl.textContent = "לחץ בלוח על אותה בחורה";
+  }, 500);
 }
 
 cubeButton.addEventListener("click", () => {
-  if (!board.length || won || called.size >= models.length) deal();
+  if (busy) return;
+  if (waitingNew || won) {
+    deal();
+    statusEl.textContent = "לוח חדש. לחץ שוב על הקוביה להגרלה";
+    return;
+  }
   draw();
 });
 jackpot.addEventListener("click", hideWin);
