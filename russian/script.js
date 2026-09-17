@@ -79,7 +79,7 @@ async function spin() {
   const land = Math.floor(Math.random() * CHAMBERS);
   const extra = 5 + Math.floor(Math.random() * 3);
   angle = (Math.floor(angle / 360) + extra) * 360 - land * 60;
-  cylinder.style.transform = `rotate(${angle}deg)`;
+  cylinder.style.setProperty("--spin", `${angle}deg`);
   await sleep(2800);
   cube.classList.remove("spin-fast");
   cubeButton.disabled = false;

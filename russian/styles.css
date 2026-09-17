@@ -8,6 +8,11 @@ body { font-family: "Heebo", sans-serif; background: #07030f; color: #fff; overf
 .game-nav a { color: #ffe08a; text-decoration: none; font-weight: 800; font-size: 0.9rem; padding: 6px 12px; border: 1px solid rgba(240,193,75,0.45); border-radius: 999px; background: rgba(0,0,0,0.35); }
 .stage { position: relative; z-index: 1; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 72px 16px 16px; }
 .hint, .status { text-align: center; color: #ffd9ee; font-weight: 700; }
+@property --spin {
+  syntax: "<angle>";
+  inherits: true;
+  initial-value: 0deg;
+}
 .gun { position: relative; width: 280px; height: 280px; }
 .pointer {
   position: absolute; left: 50%; top: -6px; z-index: 3;
@@ -18,37 +23,40 @@ body { font-family: "Heebo", sans-serif; background: #07030f; color: #fff; overf
   filter: drop-shadow(0 2px 6px rgba(0,0,0,0.45));
 }
 .cylinder {
+  --spin: 0deg;
   width: 100%; height: 100%;
   border-radius: 50%;
   background: radial-gradient(circle at 40% 35%, #9ca3af, #374151 45%, #111827);
   border: 8px solid #1f2937;
   box-shadow: inset 0 0 40px rgba(0,0,0,0.55), 0 16px 32px rgba(0,0,0,0.4);
   position: relative;
-  transition: transform 2.6s cubic-bezier(0.15, 0.7, 0.15, 1);
+  transform: rotate(var(--spin));
+  transition: --spin 2.6s cubic-bezier(0.15, 0.7, 0.15, 1);
 }
 .chamber {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 68px;
-  height: 68px;
-  margin: -34px 0 0 -34px;
+  width: 78px;
+  height: 78px;
+  margin: -39px 0 0 -39px;
   border-radius: 50%;
   overflow: hidden;
   background: #0b1220;
   border: 3px solid #111827;
-  transform: rotate(calc(var(--i) * 60deg)) translateY(-92px);
+  transform: rotate(calc(var(--i) * 60deg)) translateY(-90px) rotate(calc(var(--i) * -60deg - var(--spin)));
 }
 .chamber img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center 20%;
   display: none;
-  transform: rotate(calc(var(--i) * -60deg));
 }
 .chamber.live {
   border-color: #f0c14b;
   box-shadow: 0 0 14px rgba(240, 193, 75, 0.55);
+  z-index: 2;
 }
 .chamber.live img { display: block; }
 .chamber.miss { box-shadow: 0 0 0 4px #64748b; }
