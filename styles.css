@@ -102,10 +102,6 @@ body {
   line-height: 1.15;
 }
 
-.roulette-card {
-  background: linear-gradient(145deg, #ff4fa3, #7a2bff 55%, #ffb347);
-}
-
 .casino-card {
   background: linear-gradient(145deg, #f0c14b, #c48a12 45%, #7a2a12);
 }
