@@ -58,7 +58,10 @@ body.is-win .glow-b {
   top: 14px;
   z-index: 5;
   display: flex;
-  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  max-width: 96vw;
 }
 
 .game-nav a {

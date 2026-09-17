@@ -16,7 +16,7 @@ body {
   font-family: "Heebo", sans-serif;
   background: #07030f;
   color: #fff;
-  overflow: hidden;
+  overflow: auto;
 }
 
 .glow {
@@ -75,8 +75,8 @@ body {
 }
 
 .choice {
-  width: min(78vw, 260px);
-  min-height: 180px;
+  width: min(42vw, 220px);
+  min-height: 150px;
   display: grid;
   place-content: center;
   gap: 8px;
@@ -107,4 +107,12 @@ body {
 
 .casino-card {
   background: linear-gradient(145deg, #f0c14b, #c48a12 45%, #7a2a12);
+}
+
+.poker-card {
+  background: linear-gradient(145deg, #2b7a2b, #145c32 50%, #0b2e14);
+}
+
+.scratch-card {
+  background: linear-gradient(145deg, #90a4ae, #546e7a 45%, #37474f);
 }

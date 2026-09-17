@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>הרולטה של יואב בבורגס</title>
+  <title>כרטיס הגירוד של יואב בבורגס</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet" />
@@ -22,17 +22,28 @@
   </nav>
 
   <main class="stage">
-    <p class="hint" id="hint">לחץ על הקוביה כדי לסובב את הרולטה</p>
+    <p class="hint">לחץ על הקוביה לכרטיס חדש, ואז גרד</p>
+    <p class="machine-sign">3 בחורות זהות = זכייה</p>
 
-    <section class="roulette" id="roulette">
-      <div class="pointer" aria-hidden="true"></div>
-      <div class="wheel" id="wheel">
-        <canvas id="wheelCanvas"></canvas>
+    <section class="ticket" id="ticket">
+      <p class="ticket-title">כרטיס גירוד</p>
+      <div class="spots" dir="ltr">
+        <div class="spot" data-spot>
+          <img alt="בחורה" />
+          <canvas></canvas>
+        </div>
+        <div class="spot" data-spot>
+          <img alt="בחורה" />
+          <canvas></canvas>
+        </div>
+        <div class="spot" data-spot>
+          <img alt="בחורה" />
+          <canvas></canvas>
+        </div>
       </div>
-      <div class="hub" aria-hidden="true"></div>
     </section>
 
-    <p class="status" id="status"></p>
+    <p class="status" id="status">גרד את הכסף כדי לחשוף</p>
 
     <button class="cube-button" id="cubeButton" type="button" aria-label="מחולל הבחורות של יואב בבורגס">
       <div class="scene">
@@ -50,7 +61,6 @@
 
   <div class="jackpot" id="jackpot" hidden aria-hidden="true">
     <div class="jackpot-card">
-      <img id="winnerPhoto" alt="הבחורה שזכית בה" />
       <p class="jackpot-title">זכית בבחורה</p>
       <p class="jackpot-sub">למימוש פנה לקבלה</p>
     </div>
