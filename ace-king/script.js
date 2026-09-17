@@ -1,23 +1,22 @@
-const ACES = [
-  "../images/model1.png",
-  "../images/model2.png",
-  "../images/model7.png",
-  "../images/model8.png",
-  "../images/model9.png",
-  "../images/model14.png",
-  "../images/model15.png",
-];
+const ranks = {
+  "../images/model1.png": "A",
+  "../images/model2.png": "A",
+  "../images/model3.png": "K",
+  "../images/model4.png": "K",
+  "../images/model5.png": "K",
+  "../images/model6.png": "K",
+  "../images/model7.png": "A",
+  "../images/model8.png": "A",
+  "../images/model9.png": "A",
+  "../images/model10.png": "K",
+  "../images/model11.png": "K",
+  "../images/model12.png": "K",
+  "../images/model13.png": "K",
+  "../images/model14.png": "A",
+  "../images/model15.png": "A",
+};
 
-const KINGS = [
-  "../images/model3.png",
-  "../images/model4.png",
-  "../images/model5.png",
-  "../images/model6.png",
-  "../images/model10.png",
-  "../images/model11.png",
-  "../images/model12.png",
-  "../images/model13.png",
-];
+const photos = Object.keys(ranks);
 
 const cubeButton = document.getElementById("cubeButton");
 const cube = document.getElementById("cube");
@@ -33,11 +32,8 @@ const heroRank = document.getElementById("heroRank");
 let busy = false;
 
 function pickCard() {
-  const deck = [
-    ...ACES.map((photo) => ({ rank: "A", photo })),
-    ...KINGS.map((photo) => ({ rank: "K", photo })),
-  ];
-  return deck[Math.floor(Math.random() * deck.length)];
+  const photo = photos[Math.floor(Math.random() * photos.length)];
+  return { rank: ranks[photo], photo };
 }
 
 function hideResult() {
