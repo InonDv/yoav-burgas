@@ -197,23 +197,33 @@ function compareScore(a, b) {
 }
 
 function betAmount() {
-  return chip === "all" ? bank : chip;
+  if (chip === "all") return bank;
+  return Math.min(chip, bank);
+}
+
+function actingStreet() {
+  return street === "hole" || street === "flop" || street === "turn";
 }
 
 function paintChips() {
   if (chip !== "all" && bank < chip) {
     const next = [50, 20, 10, 5].find((n) => bank >= n);
-    chip = next || "all";
+    if (next) chip = next;
+    else if (bank > 0) chip = "all";
   }
   denomsEl.querySelectorAll("[data-chip]").forEach((btn) => {
     const val = btn.dataset.chip;
     const isAll = val === "all";
-    const n = isAll ? bank : Number(val);
+    const n = Number(val);
     btn.classList.toggle("on", isAll ? chip === "all" : chip === n);
     btn.disabled = isAll ? bank <= 0 : bank < n;
   });
   const amount = betAmount();
-  betBtn.textContent = chip === "all" ? "ALL IN " + amount : "הימור " + amount;
+  if (chip === "all") {
+    betBtn.textContent = amount > 0 ? "ALL IN " + amount : "ALL IN";
+  } else {
+    betBtn.textContent = "הימור " + (amount || chip);
+  }
 }
 
 function setActing(on) {
@@ -224,6 +234,19 @@ function setActing(on) {
 
 function sleep(ms) {
   return new Promise((resolve) => window.setTimeout(resolve, ms));
+}
+
+function dealBoard() {
+  if (street === "hole") {
+    board.push(deck.pop(), deck.pop(), deck.pop());
+    street = "flop";
+  } else if (street === "flop") {
+    board.push(deck.pop());
+    street = "turn";
+  } else if (street === "turn") {
+    board.push(deck.pop());
+    street = "river";
+  }
 }
 
 async function dealRound() {
@@ -257,17 +280,8 @@ async function nextStreet() {
   busy = true;
   setActing(false);
   cube.classList.add("spin-fast");
-  if (street === "hole") {
-    board.push(deck.pop(), deck.pop(), deck.pop());
-    street = "flop";
-    statusEl.textContent = "פלופ. צ'ק או הימור";
-  } else if (street === "flop") {
-    board.push(deck.pop());
-    street = "turn";
-    statusEl.textContent = "טרן. צ'ק או הימור";
-  } else if (street === "turn") {
-    board.push(deck.pop());
-    street = "river";
+  dealBoard();
+  if (street === "river") {
     render(false);
     await sleep(450);
     await showdown();
@@ -275,11 +289,26 @@ async function nextStreet() {
     return;
   }
   render(false);
+  statusEl.textContent = street === "flop" ? "פלופ. צ'ק או הימור" : "טרן. צ'ק או הימור";
   await sleep(350);
   cube.classList.remove("spin-fast");
   busy = false;
   setActing(true);
   paintMoney();
+}
+
+async function runOut() {
+  busy = true;
+  setActing(false);
+  cube.classList.add("spin-fast");
+  statusEl.textContent = "ALL IN · הקלפים נפתחים";
+  while (street === "hole" || street === "flop" || street === "turn") {
+    dealBoard();
+    render(false);
+    await sleep(480);
+  }
+  await showdown();
+  cube.classList.remove("spin-fast");
 }
 
 async function showdown() {
@@ -311,13 +340,22 @@ function check() {
 }
 
 function bet() {
+  if (busy || betBtn.disabled) return;
+  placeBet();
+}
+
+function placeBet() {
+  if (busy || !actingStreet()) return;
   const amount = betAmount();
-  if (busy || betBtn.disabled || amount <= 0 || bank < amount) return;
+  if (amount <= 0 || bank < amount) return;
+  const allIn = chip === "all" || amount === bank;
   bank -= amount;
   pot += amount * 2;
+  if (allIn) chip = 5;
   paintMoney();
-  statusEl.textContent = (chip === "all" ? "ALL IN " : "הימור ") + amount + " · הבית שווה";
-  nextStreet();
+  statusEl.textContent = (allIn ? "ALL IN " : "הימור ") + amount + " · הבית שווה";
+  if (allIn || bank <= 0) runOut();
+  else nextStreet();
 }
 
 function reload() {
@@ -330,14 +368,16 @@ denomsEl.querySelectorAll("[data-chip]").forEach((btn) => {
   btn.addEventListener("click", () => {
     const val = btn.dataset.chip;
     if (val === "all") {
-      if (bank <= 0) return;
+      if (bank <= 0 || busy) return;
       chip = "all";
-    } else {
-      const n = Number(val);
-      if (bank < n) return;
-      chip = n;
+      paintChips();
+      if (actingStreet()) placeBet();
+      return;
     }
-    const acting = !busy && (street === "hole" || street === "flop" || street === "turn");
+    const n = Number(val);
+    if (bank < n) return;
+    chip = n;
+    const acting = !busy && actingStreet();
     setActing(acting);
   });
 });
