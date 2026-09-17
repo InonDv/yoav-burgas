@@ -1,11 +1,11 @@
 const models = [
-  "images/model1.png",
-  "images/model2.png",
-  "images/model3.png",
-  "images/model4.png",
-  "images/model5.png",
-  "images/model6.png",
-  "images/model7.png",
+  "../images/model1.png",
+  "../images/model2.png",
+  "../images/model3.png",
+  "../images/model4.png",
+  "../images/model5.png",
+  "../images/model6.png",
+  "../images/model7.png",
 ];
 
 const LOOPS = 18;

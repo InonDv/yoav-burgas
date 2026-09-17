@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>הקזינו של יואב בבורגס</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="glow glow-a"></div>
+  <div class="glow glow-b"></div>
+
+  <nav class="game-nav">
+    <a href="../">דף הבית</a>
+    <a href="../roulette/">רולטה</a>
+    <a href="../casino/">קזינו</a>
+  </nav>
+
+  <main class="stage">
+    <p class="hint" id="hint">לחץ על הקוביה כדי לסובב</p>
+
+    <section class="machine" id="machine">
+      <p class="machine-sign">3 בחורות זהות = זכייה</p>
+      <div class="reels" dir="ltr">
+        <div class="reel"><div class="strip" data-strip></div></div>
+        <div class="reel"><div class="strip" data-strip></div></div>
+        <div class="reel"><div class="strip" data-strip></div></div>
+      </div>
+      <p class="status" id="status"></p>
+    </section>
+
+    <button class="cube-button" id="cubeButton" type="button" aria-label="מחולל הבחורות של יואב בבורגס">
+      <div class="scene">
+        <div class="cube" id="cube">
+          <div class="face front"><span>מחולל הבחורות של יואב בבורגס</span></div>
+          <div class="face back"><span>מחולל הבחורות של יואב בבורגס</span></div>
+          <div class="face right"><span>מחולל הבחורות של יואב בבורגס</span></div>
+          <div class="face left"><span>מחולל הבחורות של יואב בבורגס</span></div>
+          <div class="face top"><span>מחולל הבחורות של יואב בבורגס</span></div>
+          <div class="face bottom"><span>מחולל הבחורות של יואב בבורגס</span></div>
+        </div>
+      </div>
+    </button>
+  </main>
+
+  <div class="jackpot" id="jackpot" hidden aria-hidden="true">
+    <div class="jackpot-card">
+      <p class="jackpot-title">זכית בבחורה</p>
+      <p class="jackpot-sub">למימוש פנה לקבלה</p>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

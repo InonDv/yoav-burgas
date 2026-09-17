@@ -1,0 +1,332 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  min-height: 100%;
+  height: 100%;
+}
+
+body {
+  font-family: "Heebo", sans-serif;
+  background: #07030f;
+  color: #fff;
+  overflow: hidden;
+}
+
+body.is-win {
+  background: #14080a;
+}
+
+.glow {
+  position: fixed;
+  width: 42vw;
+  height: 42vw;
+  border-radius: 50%;
+  filter: blur(90px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.glow-a {
+  top: -12vw;
+  right: -8vw;
+  background: #ff2d8f;
+  opacity: 0.35;
+}
+
+.glow-b {
+  bottom: -16vw;
+  left: -10vw;
+  background: #6b2dff;
+  opacity: 0.4;
+}
+
+body.is-win .glow-a,
+body.is-win .glow-b {
+  background: #ffd24a;
+  opacity: 0.55;
+}
+
+.game-nav {
+  position: absolute;
+  top: 14px;
+  z-index: 5;
+  display: flex;
+  gap: 10px;
+}
+
+.game-nav a {
+  color: #ffe08a;
+  text-decoration: none;
+  font-weight: 800;
+  font-size: 0.95rem;
+  padding: 6px 12px;
+  border: 1px solid rgba(240, 193, 75, 0.45);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.game-nav a:hover {
+  background: rgba(240, 193, 75, 0.2);
+}
+
+.stage {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  padding: 20px;
+}
+
+.hint {
+  font-size: 1.05rem;
+  letter-spacing: 0.08em;
+  color: #ffd9ee;
+  text-shadow: 0 0 16px rgba(255, 80, 160, 0.8);
+  animation: pulse 1.8s ease-in-out infinite;
+}
+
+.machine {
+  width: min(92vw, 620px);
+  background: linear-gradient(180deg, #4a3314, #1a1208 55%, #0d0904);
+  border: 6px solid #f0c14b;
+  border-radius: 28px;
+  padding: 16px 16px 12px;
+  box-shadow: 0 0 40px rgba(240, 193, 75, 0.35), inset 0 0 30px rgba(0, 0, 0, 0.45);
+}
+
+.machine.winner {
+  animation: machine-glow 0.7s ease-in-out infinite alternate;
+}
+
+.machine-sign {
+  text-align: center;
+  color: #ffe08a;
+  font-weight: 900;
+  font-size: 1.15rem;
+  margin-bottom: 12px;
+  text-shadow: 0 0 12px rgba(255, 200, 60, 0.8);
+}
+
+:root {
+  --reel-h: 210px;
+}
+
+.reels {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  background: #090909;
+  padding: 12px;
+  border-radius: 18px;
+  direction: ltr;
+}
+
+.reel {
+  height: var(--reel-h);
+  overflow: hidden;
+  border-radius: 14px;
+  border: 3px solid #f5d76e;
+  position: relative;
+  background: #111;
+  box-shadow: inset 0 0 18px rgba(0, 0, 0, 0.65);
+}
+
+.reel::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 3px;
+  background: rgba(255, 215, 0, 0.4);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.strip {
+  display: flex;
+  flex-direction: column;
+  will-change: transform;
+}
+
+.strip img {
+  width: 100%;
+  height: var(--reel-h);
+  min-height: var(--reel-h);
+  flex-shrink: 0;
+  object-fit: cover;
+  display: block;
+}
+
+.status {
+  min-height: 1.6em;
+  margin-top: 10px;
+  text-align: center;
+  font-weight: 700;
+  color: #ffd9ee;
+}
+
+.cube-button {
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  z-index: 3;
+  transition: transform 0.25s ease;
+}
+
+.cube-button:hover:not(:disabled) {
+  transform: scale(1.04);
+}
+
+.cube-button:disabled {
+  cursor: wait;
+}
+
+.scene {
+  width: 200px;
+  height: 200px;
+  perspective: 900px;
+}
+
+.cube {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  animation: spin 10s linear infinite;
+}
+
+.cube.spin-fast {
+  animation: spin 0.35s linear infinite;
+}
+
+.face {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 12px;
+  background: linear-gradient(145deg, #ff4fa3, #7a2bff 55%, #ffb347);
+  border: 3px solid rgba(255, 255, 255, 0.45);
+  box-shadow: inset 0 0 30px rgba(255, 255, 255, 0.18), 0 0 24px rgba(255, 70, 160, 0.45);
+  backface-visibility: hidden;
+}
+
+.face span {
+  color: #fff;
+  font-weight: 900;
+  font-size: 1.7rem;
+  line-height: 1.15;
+  text-align: center;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.45);
+}
+
+.front  { transform: rotateY(0deg) translateZ(100px); }
+.back   { transform: rotateY(180deg) translateZ(100px); }
+.right  { transform: rotateY(90deg) translateZ(100px); }
+.left   { transform: rotateY(-90deg) translateZ(100px); }
+.top    { transform: rotateX(90deg) translateZ(100px); }
+.bottom { transform: rotateX(-90deg) translateZ(100px); }
+
+.jackpot {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: none;
+  place-items: center;
+  background: rgba(0, 0, 0, 0.55);
+  cursor: pointer;
+}
+
+.jackpot.visible {
+  display: grid;
+}
+
+.jackpot-card {
+  text-align: center;
+  padding: 32px 28px;
+  border-radius: 28px;
+  background: linear-gradient(180deg, #fff4c2, #f0c14b 45%, #c48a12);
+  border: 4px solid #fff;
+  box-shadow: 0 20px 80px rgba(0, 0, 0, 0.45), 0 0 40px rgba(255, 210, 70, 0.7);
+  animation: pop-in 0.45s cubic-bezier(0.2, 1.3, 0.4, 1);
+  max-width: min(90vw, 520px);
+}
+
+.jackpot-title {
+  color: #5a1408;
+  font-weight: 900;
+  font-size: clamp(2.2rem, 7vw, 3.4rem);
+  line-height: 1.1;
+}
+
+.jackpot-sub {
+  margin-top: 10px;
+  color: #7a2a12;
+  font-weight: 800;
+  font-size: clamp(1.2rem, 4vw, 1.7rem);
+}
+
+@keyframes spin {
+  from { transform: rotateX(-18deg) rotateY(0deg); }
+  to   { transform: rotateX(-18deg) rotateY(360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}
+
+@keyframes pop-in {
+  from {
+    transform: scale(0.72) rotate(-4deg);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes machine-glow {
+  from { box-shadow: 0 0 20px rgba(240, 193, 75, 0.3); }
+  to { box-shadow: 0 0 55px rgba(255, 220, 80, 0.9); }
+}
+
+@media (max-width: 640px) {
+  :root {
+    --reel-h: 150px;
+  }
+  .scene {
+    width: 160px;
+    height: 160px;
+  }
+
+  .front  { transform: rotateY(0deg) translateZ(80px); }
+  .back   { transform: rotateY(180deg) translateZ(80px); }
+  .right  { transform: rotateY(90deg) translateZ(80px); }
+  .left   { transform: rotateY(-90deg) translateZ(80px); }
+  .top    { transform: rotateX(90deg) translateZ(80px); }
+  .bottom { transform: rotateX(-90deg) translateZ(80px); }
+
+  .face span {
+    font-size: 1.35rem;
+  }
+
+  .reel,
+  .strip img {
+    height: 150px;
+    min-height: 150px;
+  }
+}
