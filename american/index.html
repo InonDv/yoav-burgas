@@ -26,44 +26,26 @@
     <a href="../american/">רולטה אמריקאית</a>
   </nav>
   <main class="stage">
-    <p class="hint">שים ז'טונים על בחורה (31:1), על אדום/שחור (1:1) או על 0 בית הקזינו (35:1).<br>אדום = רזות · שחור = שמנות</p>
+    <p class="hint">רולטה אמריקאית · 38 סלוטים כולל 0 ו־00.<br>מספר 35:1 · תריסר/טור 2:1 · אדום/שחור/זוגי/אי-זוגי/1-18/19-36 1:1<br>אדום = רזות · שחור = שמנות</p>
     <div class="felt">
       <div class="wheel-wrap">
         <div class="pointer"></div>
-        <canvas id="wheel" width="520" height="520"></canvas>
+        <canvas id="wheel" width="560" height="560"></canvas>
       </div>
       <div class="bank-row">
         <p class="bank">קופה <strong id="bank">100</strong></p>
         <div class="denoms" id="denoms">
           <button type="button" data-chip="1" class="on">1</button>
           <button type="button" data-chip="5">5</button>
-          <button type="button" data-chip="10">10</button>
           <button type="button" data-chip="25">25</button>
+          <button type="button" data-chip="100">100</button>
         </div>
         <button type="button" class="clear" id="clearBtn">נקה</button>
       </div>
-      <div class="colors">
-        <button type="button" class="color-bet red" data-bet="red">
-          <span>אדום · רזות</span>
-          <strong>1:1</strong>
-          <em class="stack" data-stack="red"></em>
-        </button>
-        <button type="button" class="color-bet black" data-bet="black">
-          <span>שחור · שמנות</span>
-          <strong>1:1</strong>
-          <em class="stack" data-stack="black"></em>
-        </button>
-      </div>
-      <div class="girls" id="girls"></div>
-      <div class="zeros">
-        <button type="button" class="zero-bet" data-bet="0">
-          <span>0 · בית הקזינו</span>
-          <strong>35:1</strong>
-          <em class="stack" data-stack="0"></em>
-        </button>
-      </div>
+      <div class="layout" id="layout" dir="ltr"></div>
     </div>
     <p class="status" id="status">בחר ז'טון ושים על השולחן</p>
+    <button class="act reload" id="reloadBtn" type="button" hidden>טען 100 ז'טונים</button>
     <button class="cube-button" id="cubeButton" type="button" aria-label="מחולל הבחורות של יואב בבורגס">
       <div class="scene"><div class="cube" id="cube">
         <div class="face front"><span>מחולל הבחורות של יואב בבורגס</span></div>

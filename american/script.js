@@ -1,35 +1,49 @@
-function pocket(n, color) {
-  return { key: "g" + n, src: "../images/model" + n + ".png", color, n };
+const START_BANK = 100;
+const WHEEL_ORDER = [
+  0, 28, 9, 26, 30, 11, 7, 20, 32, 17, 5, 22, 34, 15, 3, 24, 36, 13, 1,
+  "00", 27, 10, 25, 29, 12, 8, 19, 31, 18, 6, 21, 33, 16, 4, 23, 35, 14, 2,
+];
+const RED_NUMS = new Set([1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36]);
+const THIN = [1, 2, 7, 8, 9, 14, 15, 16, 17, 18];
+const FAT = [3, 4, 5, 6, 10, 11, 12, 13];
+
+const photoOf = {};
+let thinI = 0;
+let fatI = 0;
+for (let n = 1; n <= 36; n += 1) {
+  if (RED_NUMS.has(n)) {
+    photoOf[n] = THIN[thinI % THIN.length];
+    thinI += 1;
+  } else {
+    photoOf[n] = FAT[fatI % FAT.length];
+    fatI += 1;
+  }
+}
+photoOf[0] = THIN[0];
+photoOf["00"] = FAT[0];
+
+function pocketFrom(id) {
+  const key = String(id);
+  const color = id === 0 || id === "00" ? "green" : RED_NUMS.has(Number(id)) ? "red" : "black";
+  const girl = photoOf[id];
+  return {
+    key,
+    n: typeof id === "number" ? id : 0,
+    label: key,
+    color,
+    src: "../images/model" + girl + ".png",
+  };
 }
 
-const RED = new Set([1, 2, 7, 8, 9, 14, 15, 16, 17, 18]);
-const GIRL_NS = [
-  1, 3, 2, 4, 7, 5, 8, 6, 9, 10, 14, 11, 15, 12, 16, 13,
-  17, 3, 18, 4, 1, 5, 2, 6, 7, 10, 8, 11, 9, 12, 14, 13,
-];
-const ZERO_ODDS = 35;
-const zeroPocket = {
-  key: "0",
-  color: "green",
-  label: "0",
-  src: "../images/model16.png",
-};
-const pockets = [zeroPocket, ...GIRL_NS.map((n) => pocket(n, RED.has(n) ? "red" : "black"))];
-
-const girls = [];
-const seen = new Set();
-GIRL_NS.forEach((n) => {
-  if (seen.has(n)) return;
-  seen.add(n);
-  girls.push(pocket(n, RED.has(n) ? "red" : "black"));
+const pockets = WHEEL_ORDER.map(pocketFrom);
+const byKey = {};
+pockets.forEach((p) => {
+  byKey[p.key] = p;
 });
-const STRAIGHT = 31;
-const EVEN = 1;
-const START_BANK = 100;
 
 const canvas = document.getElementById("wheel");
 const ctx = canvas.getContext("2d");
-const girlsEl = document.getElementById("girls");
+const layoutEl = document.getElementById("layout");
 const bankEl = document.getElementById("bank");
 const statusEl = document.getElementById("status");
 const cubeButton = document.getElementById("cubeButton");
@@ -37,6 +51,7 @@ const cube = document.getElementById("cube");
 const jackpot = document.getElementById("jackpot");
 const winnerPhoto = document.getElementById("winnerPhoto");
 const clearBtn = document.getElementById("clearBtn");
+const reloadBtn = document.getElementById("reloadBtn");
 
 const images = {};
 let bank = START_BANK;
@@ -64,13 +79,45 @@ function betTotal() {
   return Object.values(bets).reduce((sum, n) => sum + n, 0);
 }
 
+function oddsFor(key) {
+  if (key === "0" || key === "00" || /^\d+$/.test(key)) return 35;
+  if (["d1", "d2", "d3", "c1", "c2", "c3"].includes(key)) return 2;
+  return 1;
+}
+
+function hits(key, pocket) {
+  if (key === pocket.key) return true;
+  if (pocket.color === "green") return false;
+  const n = pocket.n;
+  if (key === "red") return pocket.color === "red";
+  if (key === "black") return pocket.color === "black";
+  if (key === "even") return n % 2 === 0;
+  if (key === "odd") return n % 2 === 1;
+  if (key === "low") return n >= 1 && n <= 18;
+  if (key === "high") return n >= 19 && n <= 36;
+  if (key === "d1") return n >= 1 && n <= 12;
+  if (key === "d2") return n >= 13 && n <= 24;
+  if (key === "d3") return n >= 25 && n <= 36;
+  if (key === "c1") return n % 3 === 1;
+  if (key === "c2") return n % 3 === 2;
+  if (key === "c3") return n % 3 === 0;
+  return false;
+}
+
+function paintMoney() {
+  bankEl.textContent = String(bank);
+  const broke = bank <= 0 && betTotal() === 0;
+  reloadBtn.hidden = !broke;
+  cubeButton.disabled = busy || broke;
+}
+
 function paintStacks() {
   document.querySelectorAll("[data-stack]").forEach((el) => {
     const n = bets[el.dataset.stack] || 0;
     el.textContent = n ? String(n) : "";
     el.classList.toggle("on", n > 0);
   });
-  bankEl.textContent = String(bank);
+  paintMoney();
 }
 
 function place(key) {
@@ -113,42 +160,40 @@ function drawWheel() {
     ctx.fillStyle = p.color === "red" ? "#c41e3a" : p.color === "black" ? "#141414" : "#0f7b3a";
     ctx.fill();
     ctx.strokeStyle = "#f0c14b";
-    ctx.lineWidth = 1.5;
+    ctx.lineWidth = 1.2;
     ctx.stroke();
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.arc(0, 0, r, a0, a0 + s);
+    ctx.closePath();
+    ctx.clip();
+    ctx.rotate(a0 + s / 2 + Math.PI / 2);
     if (p.src && images[p.src]) {
-      ctx.save();
-      ctx.beginPath();
-      ctx.moveTo(0, 0);
-      ctx.arc(0, 0, r, a0, a0 + s);
-      ctx.closePath();
-      ctx.clip();
-      ctx.rotate(a0 + s / 2 + Math.PI / 2);
-      const imgW = 56;
-      const imgH = 86;
-      ctx.drawImage(images[p.src], -imgW / 2, -r + 4, imgW, imgH);
-      ctx.restore();
+      ctx.drawImage(images[p.src], -24, -r + 4, 48, 70);
     }
-    if (p.label) {
-      ctx.save();
-      ctx.rotate(a0 + s / 2 + Math.PI / 2);
-      ctx.fillStyle = "#fff";
-      ctx.strokeStyle = "#052e16";
-      ctx.lineWidth = 4;
-      ctx.font = "bold 22px Heebo, sans-serif";
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.strokeText(p.label, 0, -r + 58);
-      ctx.fillText(p.label, 0, -r + 58);
-      ctx.restore();
-    }
+    ctx.fillStyle = "#fff";
+    ctx.strokeStyle = "#111";
+    ctx.lineWidth = 3;
+    ctx.font = "bold 13px Heebo, sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.strokeText(p.label, 0, -r + 82);
+    ctx.fillText(p.label, 0, -r + 82);
+    ctx.restore();
   });
   ctx.beginPath();
-  ctx.arc(0, 0, 28, 0, Math.PI * 2);
+  ctx.arc(0, 0, 32, 0, Math.PI * 2);
   ctx.fillStyle = "#111827";
   ctx.fill();
   ctx.strokeStyle = "#f0c14b";
   ctx.lineWidth = 3;
   ctx.stroke();
+  ctx.fillStyle = "#f0c14b";
+  ctx.font = "bold 13px Heebo, sans-serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText("38", 0, 0);
   ctx.restore();
 }
 
@@ -179,13 +224,13 @@ function spinTo(index) {
 
 function payout(hit) {
   let won = 0;
-  const straight = bets[hit.key] || 0;
-  if (straight) {
-    const odds = hit.color === "green" ? ZERO_ODDS : STRAIGHT;
-    won += straight * (odds + 1);
-  }
-  if (hit.color === "red" && bets.red) won += bets.red * (EVEN + 1);
-  if (hit.color === "black" && bets.black) won += bets.black * (EVEN + 1);
+  let straight = 0;
+  Object.keys(bets).forEach((key) => {
+    if (!hits(key, hit)) return;
+    const odds = oddsFor(key);
+    won += bets[key] * (odds + 1);
+    if (odds === 35) straight += bets[key];
+  });
   return { won, straight };
 }
 
@@ -193,9 +238,8 @@ async function spin() {
   if (busy) return;
   if (betTotal() === 0) {
     if (bank <= 0) {
-      bank = START_BANK;
-      paintStacks();
-      statusEl.textContent = "קופה חדשה. שים ז'טונים";
+      paintMoney();
+      statusEl.textContent = "נגמרו הז'טונים";
       return;
     }
     statusEl.textContent = "שים ז'טון לפני הסיבוב";
@@ -214,49 +258,101 @@ async function spin() {
   bank += result.won;
   bets = {};
   paintStacks();
-  document.querySelectorAll(".girl-bet, .color-bet, .zero-bet").forEach((el) => {
-    el.classList.toggle("hit", el.dataset.bet === hit.key || el.dataset.bet === hit.color);
+  document.querySelectorAll("[data-bet]").forEach((el) => {
+    el.classList.toggle("hit", hits(el.dataset.bet, hit));
   });
-  if (hit.color === "green") {
-    statusEl.textContent = result.straight ? `0 · 35:1 · +${result.won}` : "0 · בית הקזינו";
-  } else if (hit.src && result.straight) {
-    statusEl.textContent = `31:1 · +${result.won}`;
+  if (result.straight) {
+    statusEl.textContent = `${hit.label} · 35:1 · +${result.won}`;
     showWin(hit.src);
   } else if (result.won) {
-    statusEl.textContent = `שולם ${result.won}`;
+    statusEl.textContent = `${hit.label} · שולם ${result.won}`;
+  } else if (hit.color === "green") {
+    statusEl.textContent = `${hit.label} · בית הקזינו`;
   } else {
-    statusEl.textContent = "ההימור נפל";
+    statusEl.textContent = `${hit.label} · ההימור נפל`;
   }
   cube.classList.remove("spin-fast");
   cubeButton.disabled = false;
   busy = false;
+  paintMoney();
+}
+
+function spot(key, className, inner) {
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = className;
+  btn.dataset.bet = key;
+  btn.innerHTML = inner + `<em class="stack" data-stack="${key}"></em>`;
+  btn.addEventListener("click", () => place(key));
+  return btn;
+}
+
+function numSpot(id) {
+  const p = byKey[String(id)];
+  return spot(
+    p.key,
+    "spot num " + p.color,
+    `<img src="${p.src}" alt=""><span class="num-label">${p.label}</span>`
+  );
 }
 
 function buildTable() {
-  girlsEl.innerHTML = "";
-  girls.forEach((g) => {
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "girl-bet " + g.color;
-    btn.dataset.bet = g.key;
-    btn.innerHTML = `<img src="${g.src}" alt=""><em class="stack" data-stack="${g.key}"></em><span>31:1</span>`;
-    btn.addEventListener("click", () => place(g.key));
-    girlsEl.appendChild(btn);
-  });
+  layoutEl.innerHTML = "";
+  const zeros = document.createElement("div");
+  zeros.className = "zeros";
+  zeros.appendChild(numSpot("00"));
+  zeros.appendChild(numSpot(0));
+  layoutEl.appendChild(zeros);
+
+  const numsWrap = document.createElement("div");
+  numsWrap.className = "nums-wrap";
+  const nums = document.createElement("div");
+  nums.className = "nums";
+  for (let col = 0; col < 12; col += 1) {
+    nums.appendChild(numSpot(col * 3 + 3));
+    nums.appendChild(numSpot(col * 3 + 2));
+    nums.appendChild(numSpot(col * 3 + 1));
+  }
+  const cols = document.createElement("div");
+  cols.className = "cols";
+  cols.appendChild(spot("c3", "spot outside", `<span>2:1</span>`));
+  cols.appendChild(spot("c2", "spot outside", `<span>2:1</span>`));
+  cols.appendChild(spot("c1", "spot outside", `<span>2:1</span>`));
+  numsWrap.appendChild(nums);
+  numsWrap.appendChild(cols);
+  layoutEl.appendChild(numsWrap);
+
+  const dozens = document.createElement("div");
+  dozens.className = "dozens";
+  dozens.appendChild(spot("d1", "spot outside", `<span>1st 12</span><strong>2:1</strong>`));
+  dozens.appendChild(spot("d2", "spot outside", `<span>2nd 12</span><strong>2:1</strong>`));
+  dozens.appendChild(spot("d3", "spot outside", `<span>3rd 12</span><strong>2:1</strong>`));
+  layoutEl.appendChild(dozens);
+
+  const outside = document.createElement("div");
+  outside.className = "outside-row";
+  outside.appendChild(spot("low", "spot outside", `<span>1-18</span><strong>1:1</strong>`));
+  outside.appendChild(spot("even", "spot outside", `<span>EVEN</span><strong>1:1</strong>`));
+  outside.appendChild(spot("red", "spot outside red", `<span>אדום · רזות</span><strong>1:1</strong>`));
+  outside.appendChild(spot("black", "spot outside black", `<span>שחור · שמנות</span><strong>1:1</strong>`));
+  outside.appendChild(spot("odd", "spot outside", `<span>ODD</span><strong>1:1</strong>`));
+  outside.appendChild(spot("high", "spot outside", `<span>19-36</span><strong>1:1</strong>`));
+  layoutEl.appendChild(outside);
 }
 
 function preload() {
+  const srcs = [...new Set(pockets.map((p) => p.src))];
   return Promise.all(
-    girls.map(
-      (g) =>
+    srcs.map(
+      (src) =>
         new Promise((resolve) => {
           const img = new Image();
           img.onload = () => {
-            images[g.src] = img;
+            images[src] = img;
             resolve();
           };
           img.onerror = resolve;
-          img.src = g.src;
+          img.src = src;
         })
     )
   );
@@ -268,11 +364,14 @@ document.querySelectorAll("[data-chip]").forEach((btn) => {
     document.querySelectorAll("[data-chip]").forEach((b) => b.classList.toggle("on", b === btn));
   });
 });
-document.querySelectorAll(".color-bet, .zero-bet").forEach((btn) => {
-  btn.addEventListener("click", () => place(btn.dataset.bet));
-});
 clearBtn.addEventListener("click", clearBets);
 cubeButton.addEventListener("click", spin);
+reloadBtn.addEventListener("click", () => {
+  bank = START_BANK;
+  bets = {};
+  paintStacks();
+  statusEl.textContent = "נטענו 100 ז'טונים";
+});
 jackpot.addEventListener("click", hideWin);
 buildTable();
 paintStacks();
