@@ -126,10 +126,6 @@ body {
   background: linear-gradient(145deg, #1d4ed8, #4c1d95 50%, #9f1239);
 }
 
-.dice-card {
-  background: linear-gradient(145deg, #b91c1c, #7f1d1d 50%, #f59e0b);
-}
-
 .cups-card {
   background: linear-gradient(145deg, #d97706, #92400e 50%, #fde68a);
 }
