@@ -137,3 +137,7 @@ body {
 .russian-card {
   background: linear-gradient(145deg, #7f1d1d, #1f2937 50%, #f43f5e);
 }
+
+.american-card {
+  background: linear-gradient(145deg, #0f7b3a, #c41e3a 50%, #111827);
+}

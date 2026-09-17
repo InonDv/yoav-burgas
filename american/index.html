@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>משחק הזיכרון של יואב בבורגס</title>
+  <title>רולטה אמריקאית של יואב בבורגס</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet" />
@@ -26,13 +26,41 @@
     <a href="../american/">רולטה אמריקאית</a>
   </nav>
   <main class="stage">
-    <p class="hint">בחר רמה, ואז מצא את כל הזוגות. הקוביה = משחק חדש</p>
-    <div class="levels">
-      <button class="level on" id="easyBtn" type="button">קל</button>
-      <button class="level" id="hardBtn" type="button">קשה</button>
+    <p class="hint">שים ז'טונים על בחורה (35:1) או על אדום/שחור (1:1).<br>אדום = רזות · שחור = שמנות · 0 ו-00 בית הקזינו</p>
+    <div class="felt">
+      <div class="wheel-wrap">
+        <div class="pointer"></div>
+        <canvas id="wheel" width="300" height="300"></canvas>
+      </div>
+      <div class="bank-row">
+        <p class="bank">קופה <strong id="bank">100</strong></p>
+        <div class="denoms" id="denoms">
+          <button type="button" data-chip="1" class="on">1</button>
+          <button type="button" data-chip="5">5</button>
+          <button type="button" data-chip="10">10</button>
+          <button type="button" data-chip="25">25</button>
+        </div>
+        <button type="button" class="clear" id="clearBtn">נקה</button>
+      </div>
+      <div class="colors">
+        <button type="button" class="color-bet red" data-bet="red">
+          <span>אדום · רזות</span>
+          <strong>1:1</strong>
+          <em class="stack" data-stack="red"></em>
+        </button>
+        <button type="button" class="color-bet black" data-bet="black">
+          <span>שחור · שמנות</span>
+          <strong>1:1</strong>
+          <em class="stack" data-stack="black"></em>
+        </button>
+      </div>
+      <div class="girls" id="girls"></div>
+      <div class="zeros">
+        <button type="button" class="zero-bet" data-bet="0">0 <em class="stack" data-stack="0"></em></button>
+        <button type="button" class="zero-bet" data-bet="00">00 <em class="stack" data-stack="00"></em></button>
+      </div>
     </div>
-    <div class="board" id="board"></div>
-    <p class="status" id="status"></p>
+    <p class="status" id="status">בחר ז'טון ושים על השולחן</p>
     <button class="cube-button" id="cubeButton" type="button" aria-label="מחולל הבחורות של יואב בבורגס">
       <div class="scene"><div class="cube" id="cube">
         <div class="face front"><span>מחולל הבחורות של יואב בבורגס</span></div>
@@ -51,7 +79,6 @@
       <p class="jackpot-sub">למימוש פנה לקבלה</p>
     </div>
   </div>
-  <script src="../shared/models.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
