@@ -333,8 +333,8 @@ function buildTable() {
   outside.className = "outside-row";
   outside.appendChild(spot("low", "spot outside", `<span>1-18</span><strong>1:1</strong>`));
   outside.appendChild(spot("even", "spot outside", `<span>EVEN</span><strong>1:1</strong>`));
-  outside.appendChild(spot("red", "spot outside red", `<span>אדום · רזות</span><strong>1:1</strong>`));
-  outside.appendChild(spot("black", "spot outside black", `<span>שחור · שמנות</span><strong>1:1</strong>`));
+  outside.appendChild(spot("red", "spot outside red", `<span>אדום</span><strong>1:1</strong>`));
+  outside.appendChild(spot("black", "spot outside black", `<span>שחור</span><strong>1:1</strong>`));
   outside.appendChild(spot("odd", "spot outside", `<span>ODD</span><strong>1:1</strong>`));
   outside.appendChild(spot("high", "spot outside", `<span>19-36</span><strong>1:1</strong>`));
   layoutEl.appendChild(outside);
