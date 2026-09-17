@@ -1,0 +1,37 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { min-height: 100%; height: 100%; }
+body { font-family: "Heebo", sans-serif; background: #07030f; color: #fff; overflow: auto; }
+.glow { position: fixed; width: 42vw; height: 42vw; border-radius: 50%; filter: blur(90px); pointer-events: none; z-index: 0; }
+.glow-a { top: -12vw; right: -8vw; background: #ff2d8f; opacity: 0.35; }
+.glow-b { bottom: -16vw; left: -10vw; background: #6b2dff; opacity: 0.4; }
+.game-nav { position: absolute; top: 14px; z-index: 5; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; max-width: 96vw; }
+.game-nav a { color: #ffe08a; text-decoration: none; font-weight: 800; font-size: 0.9rem; padding: 6px 12px; border: 1px solid rgba(240,193,75,0.45); border-radius: 999px; background: rgba(0,0,0,0.35); }
+.stage { position: relative; z-index: 1; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 72px 16px 16px; }
+.hint, .status { text-align: center; color: #ffd9ee; font-weight: 700; }
+.call { width: 0; height: 0; opacity: 0; border: 0; }
+.call.show { width: 88px; height: 110px; object-fit: cover; border-radius: 12px; border: 3px solid #f0c14b; opacity: 1; background: #1a0a22; }
+.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: min(92vw, 320px); }
+.cell { border: 0; padding: 0; border-radius: 12px; overflow: hidden; background: #1a0a22; border: 3px solid rgba(255,255,255,0.2); }
+.cell img { width: 100%; height: 92px; object-fit: cover; display: block; filter: grayscale(0.4) brightness(0.85); }
+.cell.marked { border-color: #f0c14b; box-shadow: 0 0 16px rgba(240,193,75,0.55); }
+.cell.marked img { filter: none; }
+.cube-button { border: 0; background: transparent; cursor: pointer; }
+.cube-button:disabled { cursor: wait; }
+.scene { width: 150px; height: 150px; perspective: 900px; }
+.cube { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; animation: spin 10s linear infinite; }
+.cube.spin-fast { animation: spin 0.35s linear infinite; }
+.face { position: absolute; inset: 0; display: grid; place-items: center; padding: 10px; background: linear-gradient(145deg, #ff4fa3, #7a2bff 55%, #ffb347); border: 3px solid rgba(255,255,255,0.45); backface-visibility: hidden; }
+.face span { color: #fff; font-weight: 900; font-size: 1.15rem; text-align: center; line-height: 1.15; }
+.front { transform: rotateY(0deg) translateZ(75px); }
+.back { transform: rotateY(180deg) translateZ(75px); }
+.right { transform: rotateY(90deg) translateZ(75px); }
+.left { transform: rotateY(-90deg) translateZ(75px); }
+.top { transform: rotateX(90deg) translateZ(75px); }
+.bottom { transform: rotateX(-90deg) translateZ(75px); }
+.jackpot { position: fixed; inset: 0; z-index: 10; display: none; place-items: center; background: rgba(0,0,0,0.55); cursor: pointer; }
+.jackpot.visible { display: grid; }
+.jackpot-card { text-align: center; padding: 22px; border-radius: 28px; background: linear-gradient(180deg, #fff4c2, #f0c14b 45%, #c48a12); border: 4px solid #fff; }
+.jackpot-card img { width: min(70vw, 260px); height: 280px; object-fit: cover; border-radius: 16px; margin-bottom: 12px; }
+.jackpot-title { color: #5a1408; font-weight: 900; font-size: 2.2rem; }
+.jackpot-sub { margin-top: 6px; color: #7a2a12; font-weight: 800; }
+@keyframes spin { from { transform: rotateX(-18deg) rotateY(0deg); } to { transform: rotateX(-18deg) rotateY(360deg); } }

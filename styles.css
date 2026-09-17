@@ -129,3 +129,15 @@ body {
 .cups-card {
   background: linear-gradient(145deg, #d97706, #92400e 50%, #fde68a);
 }
+
+.bingo-card {
+  background: linear-gradient(145deg, #be123c, #9f1239 50%, #f0c14b);
+}
+
+.memory-card {
+  background: linear-gradient(145deg, #0d9488, #115e59 50%, #5eead4);
+}
+
+.russian-card {
+  background: linear-gradient(145deg, #7f1d1d, #1f2937 50%, #f43f5e);
+}

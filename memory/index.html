@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>הרולטה של יואב בבורגס</title>
+  <title>משחק הזיכרון של יואב בבורגס</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet" />
@@ -12,7 +12,6 @@
 <body>
   <div class="glow glow-a"></div>
   <div class="glow glow-b"></div>
-
   <nav class="game-nav">
     <a href="../">דף הבית</a>
     <a href="../roulette/">רולטה</a>
@@ -26,43 +25,28 @@
     <a href="../memory/">זיכרון</a>
     <a href="../russian/">רולטה רוסית</a>
   </nav>
-
   <main class="stage">
-    <p class="hint" id="hint">לחץ על הקוביה כדי לסובב את הרולטה</p>
-
-    <section class="roulette" id="roulette">
-      <div class="pointer" aria-hidden="true"></div>
-      <div class="wheel" id="wheel">
-        <canvas id="wheelCanvas"></canvas>
-      </div>
-      <div class="hub" aria-hidden="true"></div>
-    </section>
-
+    <p class="hint">לחץ על הקוביה למשחק חדש. מצא את כל הזוגות</p>
+    <div class="board" id="board"></div>
     <p class="status" id="status"></p>
-
     <button class="cube-button" id="cubeButton" type="button" aria-label="מחולל הבחורות של יואב בבורגס">
-      <div class="scene">
-        <div class="cube" id="cube">
-          <div class="face front"><span>מחולל הבחורות של יואב בבורגס</span></div>
-          <div class="face back"><span>מחולל הבחורות של יואב בבורגס</span></div>
-          <div class="face right"><span>מחולל הבחורות של יואב בבורגס</span></div>
-          <div class="face left"><span>מחולל הבחורות של יואב בבורגס</span></div>
-          <div class="face top"><span>מחולל הבחורות של יואב בבורגס</span></div>
-          <div class="face bottom"><span>מחולל הבחורות של יואב בבורגס</span></div>
-        </div>
-      </div>
+      <div class="scene"><div class="cube" id="cube">
+        <div class="face front"><span>מחולל הבחורות של יואב בבורגס</span></div>
+        <div class="face back"><span>מחולל הבחורות של יואב בבורגס</span></div>
+        <div class="face right"><span>מחולל הבחורות של יואב בבורגס</span></div>
+        <div class="face left"><span>מחולל הבחורות של יואב בבורגס</span></div>
+        <div class="face top"><span>מחולל הבחורות של יואב בבורגס</span></div>
+        <div class="face bottom"><span>מחולל הבחורות של יואב בבורגס</span></div>
+      </div></div>
     </button>
   </main>
-
-  <div class="jackpot" id="jackpot" hidden aria-hidden="true">
+  <div class="jackpot" id="jackpot" hidden>
     <div class="jackpot-card">
-      <img id="winnerPhoto" alt="הבחורה שזכית בה" />
+      <img id="winnerPhoto" alt="">
       <p class="jackpot-title">זכית בבחורה</p>
       <p class="jackpot-sub">למימוש פנה לקבלה</p>
     </div>
   </div>
-
-  <script src="../shared/models.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
