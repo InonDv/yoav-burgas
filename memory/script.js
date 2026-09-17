@@ -1,4 +1,4 @@
-const models = [
+const easyModels = [
   "../images/model1.png",
   "../images/model2.png",
   "../images/model7.png",
@@ -7,6 +7,7 @@ const models = [
   "../images/model14.png",
   "../images/model15.png",
 ];
+const hardModels = girlModels("../images/");
 
 const board = document.getElementById("board");
 const cubeButton = document.getElementById("cubeButton");
@@ -14,7 +15,11 @@ const cube = document.getElementById("cube");
 const statusEl = document.getElementById("status");
 const jackpot = document.getElementById("jackpot");
 const winnerPhoto = document.getElementById("winnerPhoto");
+const easyBtn = document.getElementById("easyBtn");
+const hardBtn = document.getElementById("hardBtn");
 
+let hard = false;
+let pairCount = 6;
 let cards = [];
 let open = [];
 let matched = 0;
@@ -41,13 +46,24 @@ function showWin(src) {
   jackpot.classList.add("visible");
 }
 
+function setLevel(nextHard) {
+  hard = nextHard;
+  easyBtn.classList.toggle("on", !hard);
+  hardBtn.classList.toggle("on", hard);
+  board.classList.toggle("hard", hard);
+  deal();
+}
+
 function deal() {
   hideWin();
   open = [];
   matched = 0;
   lastMatch = "";
   busy = false;
-  const pairSrc = shuffle(models).slice(0, 6);
+  const pool = hard ? hardModels : easyModels;
+  pairCount = pool.length;
+  const pairSrc = hard ? [...pool] : shuffle(pool).slice(0, 6);
+  pairCount = pairSrc.length;
   cards = shuffle([...pairSrc, ...pairSrc]);
   board.innerHTML = "";
   cards.forEach((src, i) => {
@@ -63,7 +79,7 @@ function deal() {
     card.addEventListener("click", () => flip(i, card));
     board.appendChild(card);
   });
-  statusEl.textContent = "מצא זוגות";
+  statusEl.textContent = hard ? "קשה · כל הבחורות" : "מצא זוגות";
 }
 
 function flip(i, card) {
@@ -80,11 +96,11 @@ function flip(i, card) {
     lastMatch = a.src;
     open = [];
     busy = false;
-    if (matched === 6) {
+    if (matched === pairCount) {
       statusEl.textContent = "כל הזוגות!";
       showWin(lastMatch);
     } else {
-      statusEl.textContent = `${matched} מתוך 6`;
+      statusEl.textContent = `${matched} מתוך ${pairCount}`;
     }
   } else {
     window.setTimeout(() => {
@@ -92,10 +108,12 @@ function flip(i, card) {
       b.card.classList.remove("open");
       open = [];
       busy = false;
-    }, 750);
+    }, hard ? 550 : 750);
   }
 }
 
+easyBtn.addEventListener("click", () => setLevel(false));
+hardBtn.addEventListener("click", () => setLevel(true));
 cubeButton.addEventListener("click", () => {
   cube.classList.add("spin-fast");
   cubeButton.disabled = true;

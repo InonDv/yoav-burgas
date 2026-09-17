@@ -8,8 +8,27 @@ body { font-family: "Heebo", sans-serif; background: #07030f; color: #fff; overf
 .game-nav a { color: #ffe08a; text-decoration: none; font-weight: 800; font-size: 0.9rem; padding: 6px 12px; border: 1px solid rgba(240,193,75,0.45); border-radius: 999px; background: rgba(0,0,0,0.35); }
 .stage { position: relative; z-index: 1; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 72px 16px 16px; }
 .hint, .status { text-align: center; color: #ffd9ee; font-weight: 700; }
+.levels { display: flex; gap: 10px; }
+.level {
+  min-width: 96px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  border: 2px solid rgba(240,193,75,0.45);
+  background: rgba(0,0,0,0.35);
+  color: #ffe08a;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+.level.on {
+  background: linear-gradient(145deg, #f0c14b, #c48a12);
+  color: #5a1408;
+  border-color: #fff;
+}
 .board { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; width: min(92vw, 360px); }
+.board.hard { grid-template-columns: repeat(6, 1fr); gap: 6px; width: min(96vw, 560px); }
 .mem-card { border: 0; padding: 0; background: transparent; perspective: 700px; height: 92px; cursor: pointer; }
+.board.hard .mem-card { height: 70px; }
 .mem-card .inner { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.35s ease; }
 .mem-card.open .inner, .mem-card.done .inner { transform: rotateY(180deg); }
 .mem-back, .mem-front { position: absolute; inset: 0; backface-visibility: hidden; border-radius: 12px; overflow: hidden; }

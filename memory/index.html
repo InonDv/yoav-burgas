@@ -25,7 +25,11 @@
     <a href="../russian/">רולטה רוסית</a>
   </nav>
   <main class="stage">
-    <p class="hint">לחץ על הקוביה למשחק חדש. מצא את כל הזוגות</p>
+    <p class="hint">בחר רמה, ואז מצא את כל הזוגות. הקוביה = משחק חדש</p>
+    <div class="levels">
+      <button class="level on" id="easyBtn" type="button">קל</button>
+      <button class="level" id="hardBtn" type="button">קשה</button>
+    </div>
     <div class="board" id="board"></div>
     <p class="status" id="status"></p>
     <button class="cube-button" id="cubeButton" type="button" aria-label="מחולל הבחורות של יואב בבורגס">
@@ -46,6 +50,7 @@
       <p class="jackpot-sub">למימוש פנה לקבלה</p>
     </div>
   </div>
+  <script src="../shared/models.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
