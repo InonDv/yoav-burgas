@@ -7,7 +7,14 @@ const GIRL_NS = [
   1, 3, 2, 4, 7, 5, 8, 6, 9, 10, 14, 11, 15, 12, 16, 13,
   17, 3, 18, 4, 1, 5, 2, 6, 7, 10, 8, 11, 9, 12, 14, 13,
 ];
-const pockets = GIRL_NS.map((n) => pocket(n, RED.has(n) ? "red" : "black"));
+const ZERO_ODDS = 35;
+const zeroPocket = {
+  key: "0",
+  color: "green",
+  label: "0",
+  src: "../images/model16.png",
+};
+const pockets = [zeroPocket, ...GIRL_NS.map((n) => pocket(n, RED.has(n) ? "red" : "black"))];
 
 const girls = [];
 const seen = new Set();
@@ -121,6 +128,19 @@ function drawWheel() {
       ctx.drawImage(images[p.src], -imgW / 2, -r + 4, imgW, imgH);
       ctx.restore();
     }
+    if (p.label) {
+      ctx.save();
+      ctx.rotate(a0 + s / 2 + Math.PI / 2);
+      ctx.fillStyle = "#fff";
+      ctx.strokeStyle = "#052e16";
+      ctx.lineWidth = 4;
+      ctx.font = "bold 22px Heebo, sans-serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.strokeText(p.label, 0, -r + 58);
+      ctx.fillText(p.label, 0, -r + 58);
+      ctx.restore();
+    }
   });
   ctx.beginPath();
   ctx.arc(0, 0, 28, 0, Math.PI * 2);
@@ -160,7 +180,10 @@ function spinTo(index) {
 function payout(hit) {
   let won = 0;
   const straight = bets[hit.key] || 0;
-  if (straight) won += straight * (STRAIGHT + 1);
+  if (straight) {
+    const odds = hit.color === "green" ? ZERO_ODDS : STRAIGHT;
+    won += straight * (odds + 1);
+  }
   if (hit.color === "red" && bets.red) won += bets.red * (EVEN + 1);
   if (hit.color === "black" && bets.black) won += bets.black * (EVEN + 1);
   return { won, straight };
@@ -191,16 +214,16 @@ async function spin() {
   bank += result.won;
   bets = {};
   paintStacks();
-  document.querySelectorAll(".girl-bet, .color-bet").forEach((el) => {
+  document.querySelectorAll(".girl-bet, .color-bet, .zero-bet").forEach((el) => {
     el.classList.toggle("hit", el.dataset.bet === hit.key || el.dataset.bet === hit.color);
   });
-  if (hit.src && result.straight) {
+  if (hit.color === "green") {
+    statusEl.textContent = result.straight ? `0 · 35:1 · +${result.won}` : "0 · בית הקזינו";
+  } else if (hit.src && result.straight) {
     statusEl.textContent = `31:1 · +${result.won}`;
     showWin(hit.src);
   } else if (result.won) {
     statusEl.textContent = `שולם ${result.won}`;
-  } else if (hit.color === "green") {
-    statusEl.textContent = `${hit.label} · בית הקזינו`;
   } else {
     statusEl.textContent = "ההימור נפל";
   }
@@ -245,7 +268,7 @@ document.querySelectorAll("[data-chip]").forEach((btn) => {
     document.querySelectorAll("[data-chip]").forEach((b) => b.classList.toggle("on", b === btn));
   });
 });
-document.querySelectorAll(".color-bet").forEach((btn) => {
+document.querySelectorAll(".color-bet, .zero-bet").forEach((btn) => {
   btn.addEventListener("click", () => place(btn.dataset.bet));
 });
 clearBtn.addEventListener("click", clearBets);
