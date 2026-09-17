@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>הקזינו של יואב בבורגס</title>
+  <title>בלאקג'ק של יואב בבורגס</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet" />
@@ -24,14 +24,20 @@
   </nav>
 
   <main class="stage">
-    <p class="hint" id="hint">לחץ על הקוביה כדי לסובב</p>
+    <p class="hint">לחץ על הקוביה להתחלה. קח קלף או עמוד. 21 או יותר מהדילר = זכייה</p>
 
-    <section class="machine" id="machine">
-      <p class="machine-sign">3 בחורות זהות = זכייה</p>
-      <div class="reels" dir="ltr">
-        <div class="reel"><div class="strip" data-strip></div></div>
-        <div class="reel"><div class="strip" data-strip></div></div>
-        <div class="reel"><div class="strip" data-strip></div></div>
+    <section class="table">
+      <div class="seat">
+        <p class="seat-label">דילר <span id="dealerScore"></span></p>
+        <div class="row" id="dealerRow" dir="ltr"></div>
+      </div>
+      <div class="seat">
+        <p class="seat-label">יואב <span id="playerScore"></span></p>
+        <div class="row" id="playerRow" dir="ltr"></div>
+      </div>
+      <div class="actions" id="actions" hidden>
+        <button type="button" id="hitBtn">קח קלף</button>
+        <button type="button" id="standBtn">עמוד</button>
       </div>
       <p class="status" id="status"></p>
     </section>

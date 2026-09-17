@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>הקזינו של יואב בבורגס</title>
+  <title>אס זוכה קינג בוכה</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet" />
@@ -24,17 +24,20 @@
   </nav>
 
   <main class="stage">
-    <p class="hint" id="hint">לחץ על הקוביה כדי לסובב</p>
+    <p class="hint">לחץ על הקוביה להפוך קלף</p>
+    <p class="machine-sign">אס זוכה · קינג בוכה</p>
 
-    <section class="machine" id="machine">
-      <p class="machine-sign">3 בחורות זהות = זכייה</p>
-      <div class="reels" dir="ltr">
-        <div class="reel"><div class="strip" data-strip></div></div>
-        <div class="reel"><div class="strip" data-strip></div></div>
-        <div class="reel"><div class="strip" data-strip></div></div>
+    <article class="hero-card" id="heroCard">
+      <div class="card-inner">
+        <div class="card-back"></div>
+        <div class="card-front">
+          <img id="heroPhoto" alt="קלף" />
+          <span class="rank" id="heroRank"></span>
+        </div>
       </div>
-      <p class="status" id="status"></p>
-    </section>
+    </article>
+
+    <p class="status" id="status"></p>
 
     <button class="cube-button" id="cubeButton" type="button" aria-label="מחולל הבחורות של יואב בבורגס">
       <div class="scene">
@@ -51,9 +54,9 @@
   </main>
 
   <div class="jackpot" id="jackpot" hidden aria-hidden="true">
-    <div class="jackpot-card">
-      <p class="jackpot-title">זכית בבחורה</p>
-      <p class="jackpot-sub">למימוש פנה לקבלה</p>
+    <div class="jackpot-card" id="resultCard">
+      <p class="jackpot-title" id="resultTitle">זכית בבחורה</p>
+      <p class="jackpot-sub" id="resultSub">למימוש פנה לקבלה</p>
     </div>
   </div>
 
