@@ -20,6 +20,11 @@ let loaded = 0;
 let girl = models[0];
 let angle = 0;
 let busy = false;
+let primed = true;
+
+function sleep(ms) {
+  return new Promise((resolve) => window.setTimeout(resolve, ms));
+}
 
 function hideWin() {
   jackpot.hidden = true;
@@ -58,39 +63,42 @@ function loadRound() {
   });
 }
 
-function spin() {
+async function spin() {
   if (busy) return;
   busy = true;
   hideWin();
-  cylinder.classList.remove("reveal");
-  cube.classList.add("spin-fast");
   cubeButton.disabled = true;
-  loadRound();
+  if (!primed) {
+    loadRound();
+    statusEl.textContent = "תא טעון";
+    await sleep(900);
+  }
+  primed = false;
+  cube.classList.add("spin-fast");
   statusEl.textContent = "מסתובב...";
   const land = Math.floor(Math.random() * CHAMBERS);
   const extra = 5 + Math.floor(Math.random() * 3);
   angle = (Math.floor(angle / 360) + extra) * 360 - land * 60;
   cylinder.style.transform = `rotate(${angle}deg)`;
-  window.setTimeout(() => {
-    cube.classList.remove("spin-fast");
-    cubeButton.disabled = false;
-    busy = false;
-    cylinder.classList.add("reveal");
-    const hit = land === loaded;
-    [...cylinder.children].forEach((chamber, i) => {
-      chamber.classList.toggle("hit", i === loaded && hit);
-      chamber.classList.toggle("miss", i === land && !hit);
-    });
-    if (hit) {
-      statusEl.textContent = "קליע!";
-      showWin(girl);
-    } else {
-      statusEl.textContent = "נפלת בריק";
-    }
-  }, 2800);
+  await sleep(2800);
+  cube.classList.remove("spin-fast");
+  cubeButton.disabled = false;
+  busy = false;
+  const hit = land === loaded;
+  [...cylinder.children].forEach((chamber, i) => {
+    chamber.classList.toggle("hit", i === loaded && hit);
+    chamber.classList.toggle("miss", i === land && !hit);
+  });
+  if (hit) {
+    statusEl.textContent = "קליע!";
+    showWin(girl);
+  } else {
+    statusEl.textContent = "נפלת בריק";
+  }
 }
 
 cubeButton.addEventListener("click", spin);
 jackpot.addEventListener("click", hideWin);
 build();
 loadRound();
+statusEl.textContent = "תא טעון";

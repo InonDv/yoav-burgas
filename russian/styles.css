@@ -39,8 +39,18 @@ body { font-family: "Heebo", sans-serif; background: #07030f; color: #fff; overf
   border: 3px solid #111827;
   transform: rotate(calc(var(--i) * 60deg)) translateY(-92px);
 }
-.chamber img { width: 100%; height: 100%; object-fit: cover; display: none; }
-.chamber.live.hit img, .cylinder.reveal .chamber.live img { display: block; }
+.chamber img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: none;
+  transform: rotate(calc(var(--i) * -60deg));
+}
+.chamber.live {
+  border-color: #f0c14b;
+  box-shadow: 0 0 14px rgba(240, 193, 75, 0.55);
+}
+.chamber.live img { display: block; }
 .chamber.miss { box-shadow: 0 0 0 4px #64748b; }
 .chamber.hit { box-shadow: 0 0 18px 4px #f43f5e; border-color: #f0c14b; }
 .cube-button { border: 0; background: transparent; cursor: pointer; }
