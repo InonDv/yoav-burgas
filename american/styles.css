@@ -61,7 +61,7 @@ body { font-family: "Heebo", sans-serif; background: #07030f; color: #fff; overf
   position: absolute; left: 4px; bottom: 4px;
   background: rgba(0,0,0,0.55); padding: 1px 5px; border-radius: 6px; color: #ffe08a;
 }
-.zeros { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+.zeros { display: grid; grid-template-columns: 1fr; gap: 8px; margin-top: 8px; }
 .zero-bet { background: #0f7b3a; border-radius: 14px; font-size: 1.4rem; }
 .stack {
   position: absolute; top: 4px; right: 4px; min-width: 22px; height: 22px;

@@ -12,7 +12,6 @@
 <body>
   <div class="glow glow-a"></div>
   <div class="glow glow-b"></div>
-
   <nav class="game-nav">
     <a href="../">דף הבית</a>
     <a href="../casino/">קזינו</a>
@@ -26,21 +25,21 @@
     <a href="../russian/">רולטה רוסית</a>
     <a href="../american/">רולטה אמריקאית</a>
   </nav>
-
   <main class="stage">
-    <p class="hint">לחץ על הקוביה כדי לחלק 5 קלפים</p>
-    <p class="machine-sign">3 בחורות זהות = זכייה</p>
-
-    <section class="hand" id="hand" dir="ltr">
-      <article class="card" data-card><div class="card-inner"><div class="card-back"></div><div class="card-front"><img alt="" /></div></div></article>
-      <article class="card" data-card><div class="card-inner"><div class="card-back"></div><div class="card-front"><img alt="" /></div></div></article>
-      <article class="card" data-card><div class="card-inner"><div class="card-back"></div><div class="card-front"><img alt="" /></div></div></article>
-      <article class="card" data-card><div class="card-inner"><div class="card-back"></div><div class="card-front"><img alt="" /></div></div></article>
-      <article class="card" data-card><div class="card-inner"><div class="card-back"></div><div class="card-front"><img alt="" /></div></div></article>
-    </section>
-
-    <p class="status" id="status"></p>
-
+    <p class="hint">כניסה 5 ז'טונים. 2 קלפים ביד, ואז צ'ק או הימור. קוביה = יד חדשה</p>
+    <p class="bank-row">קופה <strong id="bank">100</strong> · קופה במרכז <strong id="pot">0</strong></p>
+    <p class="street-label" id="streetLabel">הבית</p>
+    <section class="hand dealer" id="dealer" dir="ltr"></section>
+    <p class="street-label">שולחן</p>
+    <section class="hand board" id="board" dir="ltr"></section>
+    <p class="street-label">היד שלך</p>
+    <section class="hand hole" id="hole" dir="ltr"></section>
+    <p class="status" id="status">לחץ על הקוביה להתחלת יד</p>
+    <div class="actions">
+      <button type="button" class="act" id="checkBtn" disabled>צ'ק</button>
+      <button type="button" class="act bet" id="betBtn" disabled>הימור 5</button>
+      <button type="button" class="act reload" id="reloadBtn" hidden>טען ז'טונים</button>
+    </div>
     <button class="cube-button" id="cubeButton" type="button" aria-label="מחולל הבחורות של יואב בבורגס">
       <div class="scene">
         <div class="cube" id="cube">
@@ -54,14 +53,13 @@
       </div>
     </button>
   </main>
-
-  <div class="jackpot" id="jackpot" hidden aria-hidden="true">
+  <div class="jackpot" id="jackpot" hidden>
     <div class="jackpot-card">
+      <img id="winnerPhoto" alt="">
       <p class="jackpot-title">זכית בבחורה</p>
       <p class="jackpot-sub">למימוש פנה לקבלה</p>
     </div>
   </div>
-
   <script src="../shared/models.js"></script>
   <script src="script.js"></script>
 </body>

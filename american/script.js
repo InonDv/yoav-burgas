@@ -3,7 +3,7 @@ function pocket(n, color) {
 }
 
 const pockets = [
-  { key: "00", color: "green", label: "00" },
+  { key: "0", color: "green", label: "0" },
   pocket(1, "red"),
   pocket(3, "black"),
   pocket(2, "red"),
@@ -18,7 +18,6 @@ const pockets = [
   pocket(11, "black"),
   pocket(15, "red"),
   pocket(12, "black"),
-  { key: "0", color: "green", label: "0" },
   pocket(13, "black"),
 ];
 
@@ -118,12 +117,12 @@ function drawWheel() {
     ctx.save();
     ctx.rotate(a0 + s / 2);
     if (p.src && images[p.src]) {
-      ctx.drawImage(images[p.src], -16, -r + 10, 32, 42);
+      ctx.drawImage(images[p.src], -26, -r + 6, 52, 68);
     } else {
       ctx.fillStyle = "#fff";
-      ctx.font = "bold 16px Heebo, sans-serif";
+      ctx.font = "bold 26px Heebo, sans-serif";
       ctx.textAlign = "center";
-      ctx.fillText(p.label, 0, -r + 36);
+      ctx.fillText("0", 0, -r + 48);
     }
     ctx.restore();
   });

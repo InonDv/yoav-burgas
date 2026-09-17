@@ -16,7 +16,7 @@ body {
   font-family: "Heebo", sans-serif;
   background: #07030f;
   color: #fff;
-  overflow: hidden;
+  overflow: auto;
 }
 
 .glow {
@@ -85,18 +85,36 @@ body {
   font-size: 1.05rem;
   color: #ffd9ee;
   text-shadow: 0 0 16px rgba(255, 80, 160, 0.8);
+  text-align: center;
+  max-width: 22rem;
 }
 
-.machine-sign {
+.bank-row {
   color: #ffe08a;
-  font-weight: 900;
-  text-shadow: 0 0 12px rgba(255, 200, 60, 0.8);
+  font-weight: 800;
+}
+
+.bank-row strong {
+  color: #f0c14b;
+  font-size: 1.2rem;
+}
+
+.street-label {
+  color: #ffd9ee;
+  font-size: 0.85rem;
+  font-weight: 800;
+  opacity: 0.8;
 }
 
 .hand {
   display: flex;
   gap: 10px;
   perspective: 900px;
+  min-height: 84px;
+}
+
+.card.slot {
+  opacity: 0.35;
 }
 
 .card {
@@ -147,6 +165,50 @@ body {
   min-height: 1.4em;
   font-weight: 700;
   color: #ffd9ee;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+.act {
+  min-width: 110px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: 2px solid rgba(240, 193, 75, 0.55);
+  background: rgba(0, 0, 0, 0.35);
+  color: #ffe08a;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.act:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.act.bet {
+  background: linear-gradient(145deg, #14532d, #052e16);
+  border-color: #f0c14b;
+  color: #fff;
+}
+
+.act.reload {
+  background: linear-gradient(145deg, #f0c14b, #c48a12);
+  color: #5a1408;
+  border-color: #fff;
+}
+
+.jackpot-card img {
+  width: min(70vw, 260px);
+  height: 280px;
+  object-fit: cover;
+  border-radius: 16px;
+  margin-bottom: 12px;
 }
 
 .cube-button {
