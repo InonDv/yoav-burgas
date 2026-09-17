@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>כרטיס הגירוד של יואב בבורגס</title>
+  <title>הפוך את הגביע של יואב בבורגס</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet" />
@@ -12,7 +12,6 @@
 <body>
   <div class="glow glow-a"></div>
   <div class="glow glow-b"></div>
-
   <nav class="game-nav">
     <a href="../">דף הבית</a>
     <a href="../roulette/">רולטה</a>
@@ -24,31 +23,23 @@
     <a href="../dice/">קוביות</a>
     <a href="../cups/">גביע</a>
   </nav>
-
   <main class="stage">
-    <p class="hint">לחץ על הקוביה לכרטיס חדש, ואז גרד</p>
-    <p class="machine-sign">3 בחורות זהות = זכייה</p>
-
-    <section class="ticket" id="ticket">
-      <p class="ticket-title">כרטיס גירוד</p>
-      <div class="spots" dir="ltr">
-        <div class="spot" data-spot>
-          <img alt="בחורה" />
-          <canvas></canvas>
-        </div>
-        <div class="spot" data-spot>
-          <img alt="בחורה" />
-          <canvas></canvas>
-        </div>
-        <div class="spot" data-spot>
-          <img alt="בחורה" />
-          <canvas></canvas>
-        </div>
-      </div>
-    </section>
-
-    <p class="status" id="status">גרד את הכסף כדי לחשוף</p>
-
+    <p class="hint">לחץ על הקוביה להתחלה, ואז בחר גביע</p>
+    <div class="board" id="board" dir="ltr">
+      <button class="cup-wrap" data-cup="0" type="button">
+        <img class="prize" alt="">
+        <div class="cup"></div>
+      </button>
+      <button class="cup-wrap" data-cup="1" type="button">
+        <img class="prize" alt="">
+        <div class="cup"></div>
+      </button>
+      <button class="cup-wrap" data-cup="2" type="button">
+        <img class="prize" alt="">
+        <div class="cup"></div>
+      </button>
+    </div>
+    <p class="status" id="status"></p>
     <button class="cube-button" id="cubeButton" type="button" aria-label="מחולל הבחורות של יואב בבורגס">
       <div class="scene">
         <div class="cube" id="cube">
@@ -62,14 +53,13 @@
       </div>
     </button>
   </main>
-
-  <div class="jackpot" id="jackpot" hidden aria-hidden="true">
+  <div class="jackpot" id="jackpot" hidden>
     <div class="jackpot-card">
+      <img id="winnerPhoto" alt="">
       <p class="jackpot-title">זכית בבחורה</p>
       <p class="jackpot-sub">למימוש פנה לקבלה</p>
     </div>
   </div>
-
   <script src="../shared/models.js"></script>
   <script src="script.js"></script>
 </body>
