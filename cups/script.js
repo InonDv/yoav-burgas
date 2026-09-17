@@ -21,15 +21,20 @@ let prizeSrc = models[0];
 let canPick = false;
 let busy = false;
 
+function rand(max) {
+  return Math.floor(Math.random() * max);
+}
+
 function slotLeft(slot) {
   if (slot === 0) return "0px";
   if (slot === 1) return "calc(50% - 55px)";
   return "calc(100% - 110px)";
 }
 
-function layout() {
+function layout(moving) {
   wraps.forEach((wrap, cup) => {
     wrap.style.left = slotLeft(order[cup]);
+    wrap.style.zIndex = moving && moving.includes(cup) ? String(8 + cup) : "1";
   });
 }
 
@@ -48,17 +53,47 @@ function sleep(ms) {
   return new Promise((resolve) => window.setTimeout(resolve, ms));
 }
 
-async function shuffle() {
-  for (let i = 0; i < 8; i += 1) {
-    let a = Math.floor(Math.random() * 3);
-    let b = Math.floor(Math.random() * 3);
-    while (b === a) b = Math.floor(Math.random() * 3);
-    const tmp = order[a];
-    order[a] = order[b];
-    order[b] = tmp;
-    layout();
-    await sleep(320);
+function applyMove(kind) {
+  if (kind === "rotL") {
+    order = [order[1], order[2], order[0]];
+    return [0, 1, 2];
   }
+  if (kind === "rotR") {
+    order = [order[2], order[0], order[1]];
+    return [0, 1, 2];
+  }
+  const [a, b] = kind.split("-").map(Number);
+  const tmp = order[a];
+  order[a] = order[b];
+  order[b] = tmp;
+  return [a, b];
+}
+
+function nextMove(lastKind) {
+  const moves = ["0-1", "1-2", "0-2", "rotL", "rotR"];
+  let kind = moves[rand(moves.length)];
+  while (kind === lastKind) kind = moves[rand(moves.length)];
+  return kind;
+}
+
+async function shuffle() {
+  const steps = 11 + rand(7);
+  let lastKind = "";
+  for (let i = 0; i < steps; i += 1) {
+    const kind = nextMove(lastKind);
+    lastKind = kind;
+    const moving = applyMove(kind);
+    const ms = 140 + rand(220);
+    wraps.forEach((wrap) => {
+      wrap.style.transitionDuration = `${ms}ms`;
+    });
+    layout(moving);
+    await sleep(ms + 20);
+  }
+  wraps.forEach((wrap) => {
+    wrap.style.transitionDuration = "";
+    wrap.style.zIndex = "1";
+  });
 }
 
 async function startRound() {
