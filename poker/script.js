@@ -1,6 +1,5 @@
 const models = girlModels();
 const ANTE = 5;
-const BET = 5;
 const START_BANK = 100;
 const RANKS = [
   { label: "A", value: 14 },
@@ -35,11 +34,13 @@ const dealerEl = document.getElementById("dealer");
 const checkBtn = document.getElementById("checkBtn");
 const betBtn = document.getElementById("betBtn");
 const reloadBtn = document.getElementById("reloadBtn");
+const denomsEl = document.getElementById("denoms");
 const jackpot = document.getElementById("jackpot");
 const winnerPhoto = document.getElementById("winnerPhoto");
 
 let bank = START_BANK;
 let pot = 0;
+let chip = 5;
 let street = "idle";
 let deck = [];
 let hole = [];
@@ -53,6 +54,7 @@ function paintMoney() {
   const broke = bank < ANTE && street === "idle";
   reloadBtn.hidden = !broke;
   cubeButton.disabled = busy || broke || street !== "idle";
+  paintChips();
 }
 
 function hideWin() {
@@ -102,13 +104,14 @@ function cardHtml(card, hidden) {
       </div>
     </article>`;
   }
+  const ten = card.label === "10" ? " ten" : "";
   return `<article class="card flipped">
     <div class="card-inner">
       <div class="card-back"></div>
       <div class="card-front ${card.color}">
-        <img src="${card.src}" alt="">
-        <span class="pip pip-tl">${card.label}<i>${card.suit}</i></span>
-        <span class="pip pip-br">${card.label}<i>${card.suit}</i></span>
+        <span class="corner tl${ten}"><b>${card.label}</b><i>${card.suit}</i></span>
+        <div class="art"><img src="${card.src}" alt=""></div>
+        <span class="corner br${ten}"><b>${card.label}</b><i>${card.suit}</i></span>
       </div>
     </div>
   </article>`;
@@ -193,9 +196,23 @@ function compareScore(a, b) {
   return 0;
 }
 
+function paintChips() {
+  if (bank < chip) {
+    const next = [25, 10, 5, 1].find((n) => bank >= n);
+    if (next) chip = next;
+  }
+  denomsEl.querySelectorAll("[data-chip]").forEach((btn) => {
+    const n = Number(btn.dataset.chip);
+    btn.classList.toggle("on", n === chip);
+    btn.disabled = bank < n;
+  });
+  betBtn.textContent = "הימור " + chip;
+}
+
 function setActing(on) {
   checkBtn.disabled = !on || busy;
-  betBtn.disabled = !on || busy || bank < BET;
+  betBtn.disabled = !on || busy || bank < chip;
+  paintChips();
 }
 
 function sleep(ms) {
@@ -287,11 +304,11 @@ function check() {
 }
 
 function bet() {
-  if (busy || betBtn.disabled || bank < BET) return;
-  bank -= BET;
-  pot += BET * 2;
+  if (busy || betBtn.disabled || bank < chip) return;
+  bank -= chip;
+  pot += chip * 2;
   paintMoney();
-  statusEl.textContent = "הימור · הבית שווה";
+  statusEl.textContent = "הימור " + chip + " · הבית שווה";
   nextStreet();
 }
 
@@ -301,6 +318,15 @@ function reload() {
   statusEl.textContent = "נטענו 100 ז'טונים";
 }
 
+denomsEl.querySelectorAll("[data-chip]").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const n = Number(btn.dataset.chip);
+    if (bank < n) return;
+    chip = n;
+    const acting = !busy && (street === "hole" || street === "flop" || street === "turn");
+    setActing(acting);
+  });
+});
 cubeButton.addEventListener("click", dealRound);
 checkBtn.addEventListener("click", check);
 betBtn.addEventListener("click", bet);

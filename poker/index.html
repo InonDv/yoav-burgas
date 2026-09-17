@@ -26,7 +26,7 @@
     <a href="../american/">רולטה אמריקאית</a>
   </nav>
   <main class="stage">
-    <p class="hint">כניסה 5 ז'טונים. 2 קלפים ביד, ואז צ'ק או הימור. קוביה = יד חדשה</p>
+    <p class="hint">כניסה 5 ז'טונים. בחר סכום הימור, ואז צ'ק או הימור. קוביה = יד חדשה</p>
     <p class="bank-row">קופה <strong id="bank">100</strong> · קופה במרכז <strong id="pot">0</strong></p>
     <p class="street-label" id="streetLabel">הבית</p>
     <section class="hand dealer" id="dealer" dir="ltr"></section>
@@ -36,6 +36,12 @@
     <section class="hand hole" id="hole" dir="ltr"></section>
     <p class="status" id="status">לחץ על הקוביה להתחלת יד</p>
     <div class="actions">
+      <div class="denoms" id="denoms">
+        <button type="button" data-chip="1">1</button>
+        <button type="button" data-chip="5" class="on">5</button>
+        <button type="button" data-chip="10">10</button>
+        <button type="button" data-chip="25">25</button>
+      </div>
       <button type="button" class="act" id="checkBtn" disabled>צ'ק</button>
       <button type="button" class="act bet" id="betBtn" disabled>הימור 5</button>
       <button type="button" class="act reload" id="reloadBtn" hidden>טען ז'טונים</button>

@@ -110,7 +110,7 @@ body {
   display: flex;
   gap: 10px;
   perspective: 900px;
-  min-height: 84px;
+  min-height: 120px;
 }
 
 .card.slot {
@@ -118,8 +118,8 @@ body {
 }
 
 .card {
-  width: min(16vw, 120px);
-  height: min(24vw, 176px);
+  width: min(18vw, 128px);
+  height: min(26vw, 188px);
 }
 
 .card-inner {
@@ -151,7 +151,18 @@ body {
 
 .card-front {
   transform: rotateY(180deg);
-  background: #fff;
+  background: #fff8ee;
+}
+
+.card-front .art {
+  position: absolute;
+  top: 34px;
+  right: 8px;
+  bottom: 34px;
+  left: 8px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #111;
 }
 
 .card-front img {
@@ -161,32 +172,67 @@ body {
   display: block;
 }
 
-.pip {
+.corner {
   position: absolute;
-  z-index: 2;
+  z-index: 3;
   display: flex;
   flex-direction: column;
   align-items: center;
-  line-height: 1;
+  line-height: 0.85;
   font-weight: 900;
-  font-size: 1.05rem;
-  min-width: 22px;
-  padding: 3px 5px;
-  border-radius: 7px;
-  background: #fff;
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+  color: #111827;
+  width: 28px;
+  pointer-events: none;
 }
 
-.pip i {
+.corner b {
+  font-size: 1.35rem;
+}
+
+.corner i {
   font-style: normal;
-  font-size: 0.85rem;
+  font-size: 1.15rem;
 }
 
-.pip-tl { top: 4px; left: 4px; }
-.pip-br { right: 4px; bottom: 4px; transform: rotate(180deg); }
-.card-front.red .pip { color: #dc2626; }
-.card-front.black .pip { color: #111827; }
+.corner.ten b {
+  font-size: 1.05rem;
+}
+
+.corner.tl { top: 3px; left: 3px; }
+.corner.br { right: 3px; bottom: 3px; transform: rotate(180deg); }
+.card-front.red .corner { color: #dc2626; }
+.card-front.black .corner { color: #111827; }
+
+.denoms {
+  display: flex;
+  gap: 8px;
+}
+
+.denoms button {
+  min-width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  font: inherit;
+  font-weight: 900;
+  cursor: pointer;
+  background: #d97706;
+  color: #fff;
+}
+
+.denoms button.on {
+  outline: 3px solid #fde68a;
+  transform: scale(1.08);
+}
+
+.denoms button[data-chip="5"] { background: #dc2626; }
+.denoms button[data-chip="10"] { background: #2563eb; }
+.denoms button[data-chip="25"] { background: #111827; }
+.denoms button:disabled {
+  opacity: 0.35;
+  cursor: default;
+  transform: none;
+}
 
 .status {
   min-height: 1.4em;
@@ -197,6 +243,7 @@ body {
 .actions {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   justify-content: center;
   gap: 10px;
 }
@@ -345,17 +392,31 @@ body {
 
 @media (max-width: 640px) {
   .card {
-    width: 56px;
-    height: 84px;
+    width: 62px;
+    height: 94px;
   }
 
-  .pip {
-    font-size: 0.7rem;
-    padding: 1px 3px;
+  .card-front .art {
+    top: 26px;
+    right: 5px;
+    bottom: 26px;
+    left: 5px;
   }
 
-  .pip i {
-    font-size: 0.65rem;
+  .corner {
+    width: 22px;
+  }
+
+  .corner b {
+    font-size: 1.05rem;
+  }
+
+  .corner i {
+    font-size: 0.9rem;
+  }
+
+  .corner.ten b {
+    font-size: 0.82rem;
   }
 
   .scene {
