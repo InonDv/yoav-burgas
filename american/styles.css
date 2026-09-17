@@ -66,10 +66,27 @@ body { font-family: "Heebo", sans-serif; background: #07030f; color: #fff; overf
   background: #14532d;
   padding: 0;
 }
-.spot.num { border: 2px solid #f0c14b; }
-.spot.num.red { background: #c41e3a; }
-.spot.num.black { background: #141414; }
-.spot.num.green { background: #0f7b3a; min-height: 72px; }
+.spot.num {
+  border: 4px solid #f0c14b;
+}
+.spot.num.red {
+  background: #c41e3a;
+  border-color: #ef4444;
+  box-shadow: inset 0 0 0 2px #7f1d1d;
+}
+.spot.num.black {
+  background: #141414;
+  border-color: #111827;
+  box-shadow: inset 0 0 0 2px #e5e7eb;
+}
+.spot.num.green {
+  background: #0f7b3a;
+  border-color: #4ade80;
+  min-height: 72px;
+}
+.spot.num.red .num-label { background: #c41e3a; color: #fff; }
+.spot.num.black .num-label { background: #111827; color: #fff; }
+.spot.num.green .num-label { background: #166534; color: #fff; }
 .spot img {
   position: absolute;
   inset: 0;
@@ -113,6 +130,7 @@ body { font-family: "Heebo", sans-serif; background: #07030f; color: #fff; overf
 }
 .stack.on { display: grid; }
 .spot.hit { box-shadow: 0 0 0 3px #fde68a; }
+.spot.num.hit { box-shadow: inset 0 0 0 2px #fff, 0 0 0 3px #fde68a; }
 .act.reload {
   min-width: 160px;
   padding: 10px 16px;
