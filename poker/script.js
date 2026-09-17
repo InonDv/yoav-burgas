@@ -196,22 +196,29 @@ function compareScore(a, b) {
   return 0;
 }
 
+function betAmount() {
+  return chip === "all" ? bank : chip;
+}
+
 function paintChips() {
-  if (bank < chip) {
-    const next = [25, 10, 5, 1].find((n) => bank >= n);
-    if (next) chip = next;
+  if (chip !== "all" && bank < chip) {
+    const next = [50, 20, 10, 5].find((n) => bank >= n);
+    chip = next || "all";
   }
   denomsEl.querySelectorAll("[data-chip]").forEach((btn) => {
-    const n = Number(btn.dataset.chip);
-    btn.classList.toggle("on", n === chip);
-    btn.disabled = bank < n;
+    const val = btn.dataset.chip;
+    const isAll = val === "all";
+    const n = isAll ? bank : Number(val);
+    btn.classList.toggle("on", isAll ? chip === "all" : chip === n);
+    btn.disabled = isAll ? bank <= 0 : bank < n;
   });
-  betBtn.textContent = "הימור " + chip;
+  const amount = betAmount();
+  betBtn.textContent = chip === "all" ? "ALL IN " + amount : "הימור " + amount;
 }
 
 function setActing(on) {
   checkBtn.disabled = !on || busy;
-  betBtn.disabled = !on || busy || bank < chip;
+  betBtn.disabled = !on || busy || betAmount() <= 0;
   paintChips();
 }
 
@@ -304,11 +311,12 @@ function check() {
 }
 
 function bet() {
-  if (busy || betBtn.disabled || bank < chip) return;
-  bank -= chip;
-  pot += chip * 2;
+  const amount = betAmount();
+  if (busy || betBtn.disabled || amount <= 0 || bank < amount) return;
+  bank -= amount;
+  pot += amount * 2;
   paintMoney();
-  statusEl.textContent = "הימור " + chip + " · הבית שווה";
+  statusEl.textContent = (chip === "all" ? "ALL IN " : "הימור ") + amount + " · הבית שווה";
   nextStreet();
 }
 
@@ -320,9 +328,15 @@ function reload() {
 
 denomsEl.querySelectorAll("[data-chip]").forEach((btn) => {
   btn.addEventListener("click", () => {
-    const n = Number(btn.dataset.chip);
-    if (bank < n) return;
-    chip = n;
+    const val = btn.dataset.chip;
+    if (val === "all") {
+      if (bank <= 0) return;
+      chip = "all";
+    } else {
+      const n = Number(val);
+      if (bank < n) return;
+      chip = n;
+    }
     const acting = !busy && (street === "hole" || street === "flop" || street === "turn");
     setActing(acting);
   });

@@ -227,7 +227,15 @@ body {
 
 .denoms button[data-chip="5"] { background: #dc2626; }
 .denoms button[data-chip="10"] { background: #2563eb; }
-.denoms button[data-chip="25"] { background: #111827; }
+.denoms button[data-chip="20"] { background: #15803d; }
+.denoms button[data-chip="50"] { background: #111827; }
+.denoms button[data-chip="all"] {
+  border-radius: 999px;
+  min-width: 78px;
+  padding: 0 10px;
+  background: #7c3aed;
+  font-size: 0.72rem;
+}
 .denoms button:disabled {
   opacity: 0.35;
   cursor: default;
