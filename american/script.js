@@ -2,27 +2,22 @@ function pocket(n, color) {
   return { key: "g" + n, src: "../images/model" + n + ".png", color, n };
 }
 
-const pockets = [
-  { key: "0", color: "green", label: "0" },
-  pocket(1, "red"),
-  pocket(3, "black"),
-  pocket(2, "red"),
-  pocket(4, "black"),
-  pocket(7, "red"),
-  pocket(5, "black"),
-  pocket(8, "red"),
-  pocket(6, "black"),
-  pocket(9, "red"),
-  pocket(10, "black"),
-  pocket(14, "red"),
-  pocket(11, "black"),
-  pocket(15, "red"),
-  pocket(12, "black"),
-  pocket(13, "black"),
-];
+const RED = new Set([1, 2, 7, 8, 9, 14, 15]);
+const GIRL_NS = [1, 3, 2, 4, 7, 5, 8, 6, 9, 10, 14, 11, 15, 12, 13];
+const pockets = [{ key: "0", color: "green", label: "0" }];
+for (let i = 0; i < 31; i += 1) {
+  const n = GIRL_NS[i % GIRL_NS.length];
+  pockets.push(pocket(n, RED.has(n) ? "red" : "black"));
+}
 
-const girls = pockets.filter((p) => p.src);
-const STRAIGHT = 35;
+const girls = [];
+const seen = new Set();
+GIRL_NS.forEach((n) => {
+  if (seen.has(n)) return;
+  seen.add(n);
+  girls.push(pocket(n, RED.has(n) ? "red" : "black"));
+});
+const STRAIGHT = 31;
 const EVEN = 1;
 const START_BANK = 100;
 
@@ -117,7 +112,7 @@ function drawWheel() {
     ctx.save();
     ctx.rotate(a0 + s / 2);
     if (p.src && images[p.src]) {
-      ctx.drawImage(images[p.src], -26, -r + 6, 52, 68);
+      ctx.drawImage(images[p.src], -18, -r + 6, 36, 48);
     } else {
       ctx.fillStyle = "#fff";
       ctx.font = "bold 26px Heebo, sans-serif";
@@ -199,7 +194,7 @@ async function spin() {
     el.classList.toggle("hit", el.dataset.bet === hit.key || el.dataset.bet === hit.color);
   });
   if (hit.src && result.straight) {
-    statusEl.textContent = `35:1 · +${result.won}`;
+    statusEl.textContent = `31:1 · +${result.won}`;
     showWin(hit.src);
   } else if (result.won) {
     statusEl.textContent = `שולם ${result.won}`;
@@ -220,7 +215,7 @@ function buildTable() {
     btn.type = "button";
     btn.className = "girl-bet " + g.color;
     btn.dataset.bet = g.key;
-    btn.innerHTML = `<img src="${g.src}" alt=""><em class="stack" data-stack="${g.key}"></em><span>35:1</span>`;
+    btn.innerHTML = `<img src="${g.src}" alt=""><em class="stack" data-stack="${g.key}"></em><span>31:1</span>`;
     btn.addEventListener("click", () => place(g.key));
     girlsEl.appendChild(btn);
   });
