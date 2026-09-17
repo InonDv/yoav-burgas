@@ -1,4 +1,12 @@
-const models = girlModels();
+const models = [
+  "../images/model1.png",
+  "../images/model2.png",
+  "../images/model7.png",
+  "../images/model8.png",
+  "../images/model9.png",
+  "../images/model14.png",
+  "../images/model15.png",
+];
 const wraps = [...document.querySelectorAll("[data-cup]")];
 const cubeButton = document.getElementById("cubeButton");
 const cube = document.getElementById("cube");
